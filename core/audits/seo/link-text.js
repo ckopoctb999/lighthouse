@@ -8,73 +8,95 @@ import {Audit} from '../audit.js';
 import UrlUtils from '../../lib/url-utils.js';
 import * as i18n from '../../lib/i18n/i18n.js';
 
-const BLOCKLIST = new Set([
+const nonDescriptiveLinkTexts = {
   // English
-  'click here',
-  'click this',
-  'go',
-  'here',
-  'information',
-  'learn more',
-  'more',
-  'more info',
-  'more information',
-  'right here',
-  'read more',
-  'see more',
-  'start',
-  'this',
+  'en': new Set([
+    'click here',
+    'click this',
+    'go',
+    'here',
+    'information',
+    'learn more',
+    'more',
+    'more info',
+    'more information',
+    'right here',
+    'read more',
+    'see more',
+    'start',
+    'this',
+  ]),
   // Japanese
-  'ここをクリック',
-  'こちらをクリック',
-  'リンク',
-  '続きを読む',
-  '続く',
-  '全文表示',
+  'ja': new Set([
+    'ここをクリック',
+    'こちらをクリック',
+    'リンク',
+    '続きを読む',
+    '続く',
+    '全文表示',
+  ]),
   // Spanish
-  'click aquí',
-  'click aqui',
-  'clicka aquí',
-  'clicka aqui',
-  'pincha aquí',
-  'pincha aqui',
-  'aquí',
-  'aqui',
-  'más',
-  'mas',
-  'más información',
-  'más informacion',
-  'mas información',
-  'mas informacion',
-  'este',
-  'enlace',
-  'este enlace',
-  'empezar',
+  'es': new Set([
+    'click aquí',
+    'click aqui',
+    'clicka aquí',
+    'clicka aqui',
+    'pincha aquí',
+    'pincha aqui',
+    'aquí',
+    'aqui',
+    'más',
+    'mas',
+    'más información',
+    'más informacion',
+    'mas información',
+    'mas informacion',
+    'este',
+    'enlace',
+    'este enlace',
+    'empezar',
+  ]),
   // Portuguese
-  'clique aqui',
-  'ir',
-  'mais informação',
-  'mais informações',
-  'mais',
-  'veja mais',
+  'pt': new Set([
+    'clique aqui',
+    'ir',
+    'mais informação',
+    'mais informações',
+    'mais',
+    'veja mais',
+  ]),
   // Korean
-  '여기',
-  '여기를 클릭',
-  '클릭',
-  '링크',
-  '자세히',
-  '자세히 보기',
-  '계속',
-  '이동',
-  '전체 보기',
+  'ko': new Set([
+    '여기',
+    '여기를 클릭',
+    '클릭',
+    '링크',
+    '자세히',
+    '자세히 보기',
+    '계속',
+    '이동',
+    '전체 보기',
+  ]),
   // Swedish
-  'här',
-  'klicka här',
-  'läs mer',
-  'mer',
-  'mer info',
-  'mer information',
-]);
+  'sv': new Set([
+    'här',
+    'klicka här',
+    'läs mer',
+    'mer',
+    'mer info',
+    'mer information',
+  ]),
+  // German
+  'de': new Set([
+    'klicke hier',
+    'hier klicken',
+    'hier',
+    'mehr',
+    'siehe',
+    'dies',
+    'das',
+  ]),
+};
 
 const UIStrings = {
   /** Title of a Lighthouse audit that tests if each link on a page contains a sufficient description of what a user will find when they click it. Generic, non-descriptive text like "click here" doesn't give an indication of what the link leads to. This descriptive title is shown when all links on the page have sufficient textual descriptions. */
@@ -126,7 +148,14 @@ class LinkText extends Audit {
           return false;
         }
 
-        return BLOCKLIST.has(link.text.trim().toLowerCase());
+        // TODO: proper language code check
+        const lang = link.textLang ? (link.textLang.split('-'))[0] : '';
+
+        if (lang && nonDescriptiveLinkTexts[lang]) {
+          return nonDescriptiveLinkTexts[lang].has(link.text.trim().toLowerCase());
+        }
+
+        return false;
       })
       .map(link => {
         return {

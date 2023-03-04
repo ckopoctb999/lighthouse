@@ -38,6 +38,51 @@ function collectAnchorElements() {
     return onclick.slice(0, 1024);
   }
 
+  /** @param {HTMLAnchorElement|SVGAElement} node */
+  function getTextLang(node) {
+    let parentLangEl;
+    let linkLang;
+    let innerElsWithLang;
+    let innerTextEqualsLinkText;
+
+    if (node instanceof HTMLAnchorElement) {
+      parentLangEl = node.closest('[lang]');
+      linkLang = !parentLangEl ? '' : parentLangEl.lang;
+      innerElsWithLang = node.querySelectorAll('[lang]');
+    } else {
+      parentLangEl = node.closest('[*|lang]');
+      linkLang = !parentLangEl ? ''
+        : parentLangEl.getAttribute('lang') ||
+          parentLangEl.getAttribute('xml:lang');
+      innerElsWithLang = node.querySelectorAll('[*|lang]');
+    }
+
+    let innerTextLang = linkLang;
+
+    if (innerElsWithLang.length) {
+      if (innerElsWithLang.length > 1) {
+        // TODO: not sure, what to do with mixed languages in link text
+        innerTextLang = '';
+      } else {
+        const firstEl = innerElsWithLang[0];
+        if (node instanceof HTMLAnchorElement) {
+          innerTextEqualsLinkText = firstEl.innerText.trim() === node.innerText.trim();
+        } else {
+          innerTextEqualsLinkText = firstEl.textContent.trim() === node.textContent.trim();
+        }
+        if (innerTextEqualsLinkText) {
+          innerTextLang = innerElsWithLang[0].getAttribute('lang') ||
+            innerElsWithLang[0].getAttribute('xml:lang');
+        } else {
+          // TODO: not sure, what to do
+          innerTextLang = '';
+        }
+      }
+    }
+
+    return innerTextLang;
+  }
+
   /** @type {Array<HTMLAnchorElement|SVGAElement>} */
   // @ts-expect-error - put into scope via stringification
   const anchorElements = getElementsInDocument('a'); // eslint-disable-line no-undef
@@ -51,6 +96,7 @@ function collectAnchorElements() {
         role: node.getAttribute('role') || '',
         name: node.name,
         text: node.innerText, // we don't want to return hidden text, so use innerText
+        textLang: getTextLang(node),
         rel: node.rel,
         target: node.target,
         // @ts-expect-error - getNodeDetails put into scope via stringification
@@ -60,10 +106,11 @@ function collectAnchorElements() {
 
     return {
       href: resolveURLOrEmpty(node.href.baseVal),
-      rawHref: node.getAttribute('href') || '',
+      rawHref: node.getAttribute('href') || node.getAttribute('xlink:href') || '',
       onclick: getTruncatedOnclick(node),
       role: node.getAttribute('role') || '',
       text: node.textContent || '',
+      textLang: getTextLang(node) || '',
       rel: '',
       target: node.target.baseVal || '',
       // @ts-expect-error - getNodeDetails put into scope via stringification
