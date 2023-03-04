@@ -10,15 +10,15 @@ import LinkTextAudit from '../../../audits/seo/link-text.js';
 
 describe('SEO: link text audit', () => {
   it('fails when link with non descriptive text is found', () => {
-    const invalidLink = {href: 'https://example.com/otherpage.html', text: 'click here', rel: ''};
+    const invalidLink = {href: 'https://example.com/otherpage.html', text: 'click here', rel: '', lang: 'en'};
     const artifacts = {
       URL: {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: ''},
+        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: '', textLang: 'en'},
         invalidLink,
-        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: ''},
+        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: '', textLang: 'en'},
       ],
     };
 
@@ -35,10 +35,10 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: ''},
-        {href: 'https://example.com/page.html', text: 'click here', rel: ''},
-        {href: 'https://example.com/page.html#test', text: 'click here', rel: ''},
-        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: ''},
+        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: '', textLang: 'en'},
+        {href: 'https://example.com/page.html', text: 'click here', rel: '', textLang: 'en'},
+        {href: 'https://example.com/page.html#test', text: 'click here', rel: '', textLang: 'en'},
+        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: '', textLang: 'en'},
       ],
     };
 
@@ -52,9 +52,9 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'javascript:alert(1)', text: 'click here', rel: ''},
-        {href: 'JavaScript:window.location="/otherpage.html"', text: 'click here', rel: ''},
-        {href: 'JAVASCRIPT:void(0)', text: 'click here', rel: ''},
+        {href: 'javascript:alert(1)', text: 'click here', rel: '', textLang: 'en'},
+        {href: 'JavaScript:window.location="/otherpage.html"', text: 'click here', rel: '', textLang: 'en'},
+        {href: 'JAVASCRIPT:void(0)', text: 'click here', rel: '', textLang: 'en'},
       ],
     };
 
@@ -68,8 +68,8 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'mailto:info@example.com', text: 'click here', rel: ''},
-        {href: 'mailto:mailmaster@localhost', text: 'click here', rel: ''},
+        {href: 'mailto:info@example.com', text: 'click here', rel: '', textLang: 'en'},
+        {href: 'mailto:mailmaster@localhost', text: 'click here', rel: '', textLang: 'en'},
       ],
     };
 
@@ -83,7 +83,7 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: '', text: 'click here', rel: ''},
+        {href: '', text: 'click here', rel: '', textLang: 'en'},
       ],
     };
 
@@ -97,7 +97,7 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: '', text: 'click here', rel: 'noopener nofollow'},
+        {href: '', text: 'click here', rel: 'noopener nofollow', textLang: 'en'},
       ],
     };
 
@@ -111,9 +111,9 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: ''},
-        {href: 'http://example.com/page.html?test=test', text: 'legit link text', rel: ''},
-        {href: 'file://Users/user/Desktop/file.png', text: 'legit link text', rel: ''},
+        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: '', textLang: 'en'},
+        {href: 'http://example.com/page.html?test=test', text: 'legit link text', rel: '', textLang: 'en'},
+        {href: 'file://Users/user/Desktop/file.png', text: 'legit link text', rel: '', textLang: 'en'},
       ],
     };
 
