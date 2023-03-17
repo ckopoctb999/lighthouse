@@ -90,20 +90,25 @@ class LargestContentfulPaintElement extends Audit {
     const loadTime = (lcpLoadEndTs - lcpLoadStartTs) / 1000;
     const renderDelay = metricResult.timing - loadTime - loadDelay - ttfb;
 
-    const details = [
+    const results = [
       {phase: 'TTFB', timing: ttfb},
       {phase: 'Load Delay', timing: loadDelay},
       {phase: 'Load Time', timing: loadTime},
       {phase: 'Render Delay', timing: renderDelay},
-    ];
+    ].map(result => {
+      const percent = 100 * result.timing / metricResult.timing;
+      const percentStr = `${percent.toFixed(2)}%`;
+      return {...result, percent: percentStr};
+    });
 
     /** @type {LH.Audit.Details.Table['headings']} */
     const headings = [
       {key: 'phase', valueType: 'text', label: 'Phase'},
+      {key: 'percent', valueType: 'text', label: '% of LCP'},
       {key: 'timing', valueType: 'ms', label: 'Timing'},
     ];
 
-    return Audit.makeTableDetails(headings, details);
+    return Audit.makeTableDetails(headings, results);
   }
 
   /**
