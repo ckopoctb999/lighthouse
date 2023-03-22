@@ -25,8 +25,6 @@ const exclusions = {
     'metrics-tricky-tti', 'metrics-tricky-tti-late-fcp', 'screenshot',
     // Disabled because of differences that need further investigation
     'byte-efficiency', 'byte-gzip', 'perf-preload',
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=1420418
-    'issues-mixed-content',
   ],
 };
 

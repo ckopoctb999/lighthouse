@@ -18,6 +18,8 @@ import esMain from 'es-main';
 import {rollup} from 'rollup';
 // @ts-expect-error: plugin has no types.
 import PubAdsPlugin from 'lighthouse-plugin-publisher-ads';
+// @ts-expect-error: plugin has no types.
+import SoftNavPlugin from 'lighthouse-plugin-soft-navigation';
 
 import * as rollupPlugins from './rollup-plugins.js';
 import {Runner} from '../core/runner.js';
@@ -38,6 +40,9 @@ const GIT_READABLE_REF =
 /** @type {Array<string>} */
 // @ts-expect-error
 const pubAdsAudits = PubAdsPlugin.audits.map(a => a.path);
+/** @type {Array<string>} */
+// @ts-expect-error
+const softNavAudits = SoftNavPlugin.audits.map(a => a.path);
 
 /** @param {string} file */
 const isDevtools = file =>
@@ -87,11 +92,15 @@ async function buildBundle(entryPath, distPath, opts = {minify: true}) {
     ...Runner.getAuditList().map(gatherer => `../audits/${gatherer}`),
   ];
 
-  // Include lighthouse-plugin-publisher-ads.
+  // Include plugins.
   if (isDevtools(entryPath) || isLightrider(entryPath)) {
     dynamicModulePaths.push('lighthouse-plugin-publisher-ads');
     pubAdsAudits.forEach(pubAdAudit => {
       dynamicModulePaths.push(pubAdAudit);
+    });
+    dynamicModulePaths.push('lighthouse-plugin-soft-navigation');
+    softNavAudits.forEach(softNavAudit => {
+      dynamicModulePaths.push(softNavAudit);
     });
   }
 

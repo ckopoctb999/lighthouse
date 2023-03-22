@@ -48,7 +48,7 @@ echo -e "$check lighthouse-dt-bundle copied."
 # generate bundle.d.ts
 npx tsc --allowJs --declaration --emitDeclarationOnly dist/report/bundle.esm.js
 
-# Exports of report/clients/bundle.js can possibly be mistakenly overriden by tsc.
+# Exports of report/clients/bundle.js can possibly be mistakenly overridden by tsc.
 # Funky sed inplace command so we support both GNU sed and BSD sed (used by GHA devtools runner on macos)
 #     https://stackoverflow.com/a/22084103/89484
 sed -i.bak 's/export type DOM = any;//' dist/report/bundle.esm.d.ts

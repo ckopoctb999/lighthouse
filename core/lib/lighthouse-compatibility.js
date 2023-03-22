@@ -81,6 +81,23 @@ function upgradeLhrForCompatibility(lhr) {
         }
       }
 
+      // In 10.0, third-party-summary deprecated entity: LinkValue and switched to entity name string
+      if (audit.id === 'third-party-summary') {
+        if (audit.details.type === 'opportunity' || audit.details.type === 'table') {
+          const {headings, items} = audit.details;
+          if (headings[0].valueType === 'link') {
+            // Apply upgrade only if we are dealing with an older version (valueType=link marker).
+            headings[0].valueType = 'text';
+            for (const item of items) {
+              if (typeof item.entity === 'object' && item.entity.type === 'link') {
+                item.entity = item.entity.text;
+              }
+            }
+            audit.details.isEntityGrouped = true;
+          }
+        }
+      }
+
       // TODO: convert printf-style displayValue.
       // Added:   #5099, v3
       // Removed: #6767, v4

@@ -138,7 +138,7 @@ function addSniffer(receiver, methodName, override) {
       Array.prototype.push.call(args, result);
       override.apply(this, args);
     } catch (e) {
-      throw new Error('Exception in overriden method \'' + methodName + '\': ' + e);
+      throw new Error('Exception in overridden method \'' + methodName + '\': ' + e);
     }
     return result;
   };

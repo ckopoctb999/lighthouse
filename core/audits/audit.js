@@ -15,12 +15,18 @@ const DEFAULT_PASS = 'defaultPass';
  * @typedef TableOptions
  * @property {number=} wastedMs
  * @property {number=} wastedBytes
+ * @property {LH.Audit.Details.Table['sortedBy']=} sortedBy
+ * @property {LH.Audit.Details.Table['skipSumming']=} skipSumming
+ * @property {LH.Audit.Details.Table['isEntityGrouped']=} isEntityGrouped
  */
 
 /**
  * @typedef OpportunityOptions
  * @property {number} overallSavingsMs
  * @property {number=} overallSavingsBytes
+ * @property {LH.Audit.Details.Opportunity['sortedBy']=} sortedBy
+ * @property {LH.Audit.Details.Opportunity['skipSumming']=} skipSumming
+ * @property {LH.Audit.Details.Opportunity['isEntityGrouped']=} isEntityGrouped
  */
 
 /**
@@ -75,7 +81,7 @@ class Audit {
    * @return {LH.Audit.Product|Promise<LH.Audit.Product>}
    */
   static audit(artifacts, context) {
-    throw new Error('audit() method must be overriden');
+    throw new Error('audit() method must be overridden');
   }
 
   /* eslint-enable no-unused-vars */
@@ -139,7 +145,7 @@ class Audit {
    * @return {LH.Audit.Details.Table}
    */
   static makeTableDetails(headings, results, options = {}) {
-    const {wastedBytes, wastedMs} = options;
+    const {wastedBytes, wastedMs, sortedBy, skipSumming, isEntityGrouped} = options;
     const summary = (wastedBytes || wastedMs) ? {wastedBytes, wastedMs} : undefined;
     if (results.length === 0) {
       return {
@@ -157,6 +163,9 @@ class Audit {
       headings: headings,
       items: results,
       summary,
+      sortedBy,
+      skipSumming,
+      isEntityGrouped,
     };
   }
 
@@ -234,7 +243,7 @@ class Audit {
    */
   static makeOpportunityDetails(headings, items, options) {
     Audit.assertHeadingKeysExist(headings, items);
-    const {overallSavingsMs, overallSavingsBytes} = options;
+    const {overallSavingsMs, overallSavingsBytes, sortedBy, skipSumming, isEntityGrouped} = options;
 
     return {
       type: 'opportunity',
@@ -242,6 +251,9 @@ class Audit {
       items,
       overallSavingsMs,
       overallSavingsBytes,
+      sortedBy,
+      skipSumming,
+      isEntityGrouped,
     };
   }
 

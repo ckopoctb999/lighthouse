@@ -469,7 +469,7 @@ describe('GatherRunner', function() {
 
   it('returns a pageLoadError and no artifacts when there is a network error', async () => {
     const requestedUrl = 'https://example.com';
-    // This page load error should be overriden by ERRORED_DOCUMENT_REQUEST (for being
+    // This page load error should be overridden by ERRORED_DOCUMENT_REQUEST (for being
     // more specific) since the main document network request failed with a 500.
     const navigationError = new LighthouseError(LighthouseError.errors.NO_FCP);
     const driver = Object.assign({}, fakeDriver, {

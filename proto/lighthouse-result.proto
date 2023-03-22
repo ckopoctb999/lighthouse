@@ -604,6 +604,15 @@ message I18n {
 
     // Label for a row in a table that shows the screen emulation used
     string runtime_settings_screen_emulation = 60;
+
+    // Label for a row decorative chip indiciating entity is first-party.
+    string first_party_chip_label = 61;
+
+    // Label for a link tooltip indicating that it will be opened in a new tab of the browser.
+    string open_in_a_new_tab_tooltip = 62;
+
+    // Label for a generic category for all resources that could not be attributed against a 1st or 3rd party entity.
+    string unattributable = 63;
   }
 
   // The message holding all formatted strings used in the renderer.

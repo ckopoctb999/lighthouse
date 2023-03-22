@@ -62,9 +62,19 @@ body {
   padding: 16px;
   max-width: 80vw;
   border: 2px dashed rgba(0,0,0,0.2);
-  cursor: pointer;
   background-color: #fff;
 }
+
+.viewer-placeholder p {
+  margin-bottom: 0;
+}
+.viewer-placeholder ul {
+  margin: 0;
+}
+.viewer-placeholder hr {
+  margin: 16px 0;
+}
+
 .viewer-placeholder-inner.lh-loading {
   filter: blur(2px) grayscale(1);
   cursor: wait
@@ -77,13 +87,25 @@ body {
 }
 .viewer-placeholder__heading {
   font-weight: 300;
-  margin: 0;
+  margin: 0 0 24px;
   line-height: 32px;
 }
 .viewer-placeholder__help {
-  margin-top: 12px;
   line-height: 1.6;
 }
+
+.viewer-placeholder__file-button {
+  border: 0;
+  background: 0;
+  display: inline;
+  padding: 0;
+  color: #0000ee;
+  color: -webkit-link;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .viewer-placeholder-logo {
   width: 140px;
   height: 140px;

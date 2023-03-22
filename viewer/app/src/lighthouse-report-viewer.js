@@ -91,14 +91,9 @@ export class LighthouseReportViewer {
       inputTarget.value = '';
     });
 
-    // A click on the visual placeholder will trigger the hidden file input.
-    const placeholderTarget = find('.viewer-placeholder-inner', document);
-    placeholderTarget.addEventListener('click', e => {
-      const target = /** @type {?Element} */ (e.target);
-
-      if (target && target.localName !== 'input' && target.localName !== 'a') {
-        fileInput.click();
-      }
+    const selectFileEl = find('.viewer-placeholder__file-button', document);
+    selectFileEl.addEventListener('click', _ => {
+      fileInput.click();
     });
   }
 

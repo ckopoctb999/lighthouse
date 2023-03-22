@@ -73,7 +73,7 @@ class NetworkRTT extends Audit {
       {key: 'rtt', valueType: 'ms', granularity: 1, label: str_(i18n.UIStrings.columnTimeSpent)},
     ];
 
-    const tableDetails = Audit.makeTableDetails(headings, results);
+    const tableDetails = Audit.makeTableDetails(headings, results, {sortedBy: ['rtt']});
 
     return {
       score: 1,

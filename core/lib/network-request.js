@@ -225,7 +225,7 @@ class NetworkRequest {
     this.isSecure = UrlUtils.isSecureScheme(this.parsedURL.scheme);
 
     this.rendererStartTime = data.timestamp * 1000;
-    // Expected to be overriden with better value in `_recomputeTimesWithResourceTiming`.
+    // Expected to be overridden with better value in `_recomputeTimesWithResourceTiming`.
     this.networkRequestTime = this.rendererStartTime;
 
     this.requestMethod = data.request.method;

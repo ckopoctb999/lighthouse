@@ -7,6 +7,7 @@
 import assert from 'assert/strict';
 
 import jsdom from 'jsdom';
+import jestMock from 'jest-mock';
 
 import {DOM} from '../../renderer/dom.js';
 import {I18nFormatter} from '../../renderer/i18n-formatter.js';
@@ -513,6 +514,213 @@ describe('DetailsRenderer', () => {
       });
     });
 
+    ['table', 'opportunity'].forEach(tableType =>
+      describe(`entity grouped ${tableType}`, () => {
+        let _console;
+        before(() => {
+          createRenderer({
+            entities: [
+              {name: 'example.com', category: 'Cat', isFirstParty: true},
+              {name: 'cdn.com', category: 'CDN'},
+            ],
+          });
+
+          _console = global.console.warn;
+          global.console.warn = jestMock.fn();
+        });
+
+        after(() => {
+          global.console.warn = _console;
+        });
+
+        it(`renders ${tableType} grouped with entities provided and items marked`, () => {
+          const el = renderer.render({
+            type: tableType,
+            headings: [
+              {key: 'url', valueType: 'url', label: 'URL'},
+              {key: 'totalBytes', valueType: 'bytes', label: 'Size (KiB)'},
+              {key: 'wastedBytes', valueType: 'bytes', label: 'Potential Savings (KiB)'},
+            ],
+            items: [
+              {url: 'https://example.com/1', totalBytes: 100, wastedBytes: 500, entity: 'example.com'},
+              {url: 'https://example.com/2', totalBytes: 200, wastedBytes: 600, entity: 'example.com'},
+              {url: 'https://cdn.com/1', totalBytes: 300, wastedBytes: 700, entity: 'cdn.com'},
+              {url: 'https://cdn.com/2', totalBytes: 400, wastedBytes: 800, entity: 'cdn.com'},
+              {url: 'https://unattributable.com/1', totalBytes: 300, wastedBytes: 700}, // entity not marked.
+              {url: 'Unattributable', totalBytes: 500, wastedBytes: 500}, // entity not marked.
+            ],
+          });
+
+          assert.equal(el.querySelectorAll('tr').length, 10, `did not render ${tableType} rows`);
+          assert.equal(el.querySelectorAll('.lh-row--group').length, 3,
+            'did not render all entity grouped rows');
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[0].children].map(td => td.textContent),
+            ['example.com Cat 1st party', '0.3 KiB', '1.1 KiB'],
+            'did not render 1st party grouped row correctly'
+          );
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[1].children].map(td => td.textContent),
+            ['cdn.com CDN', '0.7 KiB', '1.5 KiB'],
+            'did not render CDN category row correctly'
+          );
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[2].children].map(td => td.textContent),
+            ['Unattributable', '0.8 KiB', '1.2 KiB'],
+            'did not render all Unattributable row'
+          );
+        });
+
+        it('does not group if entity classification is absent', () => {
+          const el = renderer.render({
+            type: tableType,
+            headings: [
+              {key: 'url', valueType: 'url', label: 'URL'},
+              {key: 'totalBytes', valueType: 'bytes', label: 'Size (KiB)'},
+              {key: 'wastedBytes', valueType: 'bytes', label: 'Potential Savings (KiB)'},
+            ],
+            items: [
+              {url: 'https://example.com/1', totalBytes: 100, wastedBytes: 500},
+              {url: 'https://example.com/2', totalBytes: 200, wastedBytes: 600},
+              {url: 'https://cdn.com/1', totalBytes: 300, wastedBytes: 700},
+              {url: 'https://cdn.com/2', totalBytes: 400, wastedBytes: 800},
+              {url: 'https://unattributable.com/1', totalBytes: 300, wastedBytes: 700},
+              {url: 'Unattributable', totalBytes: 500, wastedBytes: 500},
+            ],
+          });
+
+          assert.equal(el.querySelectorAll('tr').length, 7, `did not render ${tableType} rows`);
+          assert.equal(el.querySelectorAll('.lh-row--group').length, 0,
+            'rendered entity grouped rows without entity classification');
+        });
+
+        it('does not group again if audit is already grouped by entity', () => {
+          const el = renderer.render({
+            type: tableType,
+            isEntityGrouped: true,
+            headings: [
+              {key: 'url', valueType: 'url', label: 'URL'},
+              {key: 'totalBytes', valueType: 'bytes', label: 'Size (KiB)'},
+              {key: 'wastedBytes', valueType: 'bytes', label: 'Potential Savings (KiB)'},
+            ],
+            items: [
+              {url: 'https://example.com/1', totalBytes: 100, wastedBytes: 500, entity: 'example.com'},
+              {url: 'https://example.com/2', totalBytes: 200, wastedBytes: 600},
+              {url: 'https://cdn.com/1', totalBytes: 300, wastedBytes: 700},
+              {url: 'https://cdn.com/2', totalBytes: 400, wastedBytes: 800},
+              {url: 'https://unattributable.com/1', totalBytes: 300, wastedBytes: 700},
+              {url: 'Unattributable', totalBytes: 500, wastedBytes: 500},
+            ],
+          });
+
+          assert.equal(el.querySelectorAll('tr').length, 7, `did not render ${tableType} rows`);
+          assert.equal(el.querySelectorAll('.lh-row--group').length, 1,
+            'did not style entity classified row as a grouped row');
+        });
+
+        it('throws a warning for unsupported types being sorted', () => {
+          renderer.render({
+            type: tableType,
+            sortedBy: ['totalBytes'],
+            headings: [
+              {key: 'url', valueType: 'url', label: 'URL'},
+              {key: 'totalBytes', valueType: 'text', label: 'Size (KiB)'},
+              {key: 'wastedBytes', valueType: 'bytes', label: 'Potential Savings (KiB)'},
+            ],
+            items: [
+              {url: 'https://example.com/1',
+                totalBytes: {type: 'link', text: 'linkText', url: 'linkUrl'},
+                wastedBytes: 500, entity: 'example.com'},
+              {url: 'Unattributable', totalBytes: true, wastedBytes: 500},
+              {url: 'https://cdn.com/2', totalBytes: 400, wastedBytes: 800, entity: 'cdn.com'},
+            ],
+          });
+
+          expect(global.console.warn).toHaveBeenCalled();
+        });
+
+        it('skips summing on skipSumming columns', () => {
+          const el = renderer.render({
+            type: tableType,
+            skipSumming: ['totalBytes', 'wastedBytes'],
+            headings: [
+              {key: 'url', valueType: 'url', label: 'URL'},
+              {key: 'totalBytes', valueType: 'bytes', label: 'Size (KiB)'},
+              {key: 'wastedBytes', valueType: 'bytes', label: 'Potential Savings (KiB)'},
+            ],
+            items: [
+              {url: 'https://example.com/1', totalBytes: 100, wastedBytes: 500, entity: 'example.com'},
+              {url: 'https://example.com/2', totalBytes: 200, wastedBytes: 600, entity: 'example.com'},
+              {url: 'https://cdn.com/1', totalBytes: 300, wastedBytes: 700, entity: 'cdn.com'},
+              {url: 'https://cdn.com/2', totalBytes: 400, wastedBytes: 800, entity: 'cdn.com'},
+              {url: 'https://unattributable.com/1', totalBytes: 300, wastedBytes: 700}, // entity not marked.
+              {url: 'Unattributable', totalBytes: 500, wastedBytes: 500}, // entity not marked.
+            ],
+          });
+
+          assert.equal(el.querySelectorAll('tr').length, 10, `did not render ${tableType} rows`);
+          assert.equal(el.querySelectorAll('.lh-row--group').length, 3,
+            'did not style entity classified row as a grouped row');
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[0].children].map(td => td.textContent),
+            ['example.com Cat 1st party', '', ''],
+            'did not render 1st party grouped row correctly'
+          );
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[1].children].map(td => td.textContent),
+            ['cdn.com CDN', '', ''],
+            'did not render CDN category row correctly'
+          );
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[2].children].map(td => td.textContent),
+            ['Unattributable', '', ''],
+            'did not render all Unattributable row'
+          );
+        });
+
+        it(`sorts grouped ${tableType} rows`, () => {
+          const el = renderer.render({
+            type: tableType,
+            sortedBy: ['totalBytes', 'url'],
+            headings: [
+              {key: 'url', valueType: 'url', label: 'URL'},
+              {key: 'totalBytes', valueType: 'bytes', label: 'Size (KiB)'},
+              {key: 'wastedBytes', valueType: 'bytes', label: 'Potential Savings (KiB)'},
+            ],
+            items: [
+              {url: 'https://example.com/1', totalBytes: 100, wastedBytes: 500, entity: 'example.com'},
+              {url: 'https://example.com/2', totalBytes: 200, wastedBytes: 600, entity: 'example.com'},
+              {url: 'https://unattributable.com/1', totalBytes: 300, wastedBytes: 700}, // entity not marked.
+              {url: 'Unattributable', totalBytes: 400, wastedBytes: 500}, // entity not marked.
+              {url: 'https://cdn.com/1', totalBytes: 300, wastedBytes: 700, entity: 'cdn.com'},
+              {url: 'https://cdn.com/2', totalBytes: 400, wastedBytes: 800, entity: 'cdn.com'},
+            ],
+          });
+
+          assert.equal(el.querySelectorAll('tr').length, 10, `did not render ${tableType} rows`);
+          assert.equal(el.querySelectorAll('.lh-row--group').length, 3,
+            'did not render all entity grouped rows');
+
+          // We expect grouped rows should be sorted by totalBytes desc first, and by url asc.
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[0].children].map(td => td.textContent),
+            ['cdn.com CDN', '0.7 KiB', '1.5 KiB'],
+            'did not render CDN category row correctly'
+          );
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[1].children].map(td => td.textContent),
+            ['Unattributable', '0.7 KiB', '1.2 KiB'],
+            'did not render all Unattributable row'
+          );
+          assert.deepStrictEqual(
+            [...el.querySelectorAll('.lh-row--group')[2].children].map(td => td.textContent),
+            ['example.com Cat 1st party', '0.3 KiB', '1.1 KiB'],
+            'did not render 1st party grouped row correctly'
+          );
+        });
+      })
+    );
+
     it('renders source-location values', () => {
       const sourceLocation = {
         type: 'source-location',
@@ -757,7 +965,7 @@ describe('DetailsRenderer', () => {
     it('uses the item\'s type over the heading type', () => {
       const details = {
         type: 'table',
-        // valueType is overriden by code object
+        // valueType is overridden by code object
         headings: [{key: 'content', valueType: 'url', label: 'Heading'}],
         items: [
           {content: {type: 'code', value: 'https://codeobject.com'}},

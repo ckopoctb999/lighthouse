@@ -27,7 +27,13 @@ class ReportUtils {
 
     for (const audit of Object.values(clone.audits)) {
       // Attach table/opportunity items with entity information.
-      ReportUtils.classifyEntities(clone.entities, audit);
+      if (audit.details) {
+        if (audit.details.type === 'opportunity' || audit.details.type === 'table') {
+          if (!audit.details.isEntityGrouped && clone.entities) {
+            ReportUtils.classifyEntities(clone.entities, audit.details);
+          }
+        }
+      }
     }
 
     // For convenience, smoosh all AuditResults into their auditRef (which has just weight & group)
@@ -79,7 +85,7 @@ class ReportUtils {
    * Given an audit's details, identify and return a URL locator function that
    * can be called later with an `item` to extract the URL of it.
    * @param {LH.FormattedIcu<LH.Audit.Details.TableColumnHeading[]>} headings
-   * @return {{(item: LH.FormattedIcu<LH.Audit.Details.TableItem>): string|undefined}=}
+   * @return {((item: LH.FormattedIcu<LH.Audit.Details.TableItem>) => string|undefined)=}
    */
   static getUrlLocatorFn(headings) {
     // The most common type, valueType=url.
@@ -109,17 +115,12 @@ class ReportUtils {
 
   /**
    * Mark TableItems/OpportunityItems with entity names.
-   * @param {LH.Result.Entities|undefined} entities
-   * @param {import('../../types/lhr/audit-result').Result} audit
+   * @param {LH.Result.Entities} entities
+   * @param {LH.FormattedIcu<LH.Audit.Details.Opportunity|LH.Audit.Details.Table>} details
    */
-  static classifyEntities(entities, audit) {
-    if (!entities) return;
-    if (audit.details?.type !== 'opportunity' && audit.details?.type !== 'table') {
-      return;
-    }
-
+  static classifyEntities(entities, details) {
     // If details.items are already marked with entity attribute during an audit, nothing to do here.
-    const {items, headings} = audit.details;
+    const {items, headings} = details;
     if (!items.length || items.some(item => item.entity)) return;
 
     // Identify a URL-locator function that we could call against each item to get its URL.
@@ -140,6 +141,30 @@ class ReportUtils {
       const entity = entities.find(e => e.origins.includes(origin));
       if (entity) item.entity = entity.name;
     }
+  }
+
+  /**
+   * Returns a comparator created from the supplied list of keys
+   * @param {Array<string>} sortedBy
+   * @return {((a: LH.Audit.Details.TableItem, b: LH.Audit.Details.TableItem) => number)}
+   */
+  static getTableItemSortComparator(sortedBy) {
+    return (a, b) => {
+      for (const key of sortedBy) {
+        const aVal = a[key];
+        const bVal = b[key];
+        if (typeof aVal !== typeof bVal || !['number', 'string'].includes(typeof aVal)) {
+          console.warn(`Warning: Attempting to sort unsupported value type: ${key}.`);
+        }
+        if (typeof aVal === 'number' && typeof bVal === 'number' && aVal !== bVal) {
+          return bVal - aVal;
+        }
+        if (typeof aVal === 'string' && typeof bVal === 'string' && aVal !== bVal) {
+          return aVal.localeCompare(bVal);
+        }
+      }
+      return 0;
+    };
   }
 
   /**
@@ -440,6 +465,13 @@ const UIStrings = {
   runtimeSlow4g: 'Slow 4G throttling',
   /** Label indicating that Lighthouse throttled the page using custom throttling settings. */
   runtimeCustom: 'Custom throttling',
+
+  /** This label is for a decorative chip that is included in a table row. The label indicates that the entity/company name in the row belongs to the first-party (or "1st-party"). First-party label is used to identify resources that are directly controlled by the owner of the web page. */
+  firstPartyChipLabel: '1st party',
+  /** Descriptive explanation in a tooltip form for a link to be opened in a new tab of the browser. */
+  openInANewTabTooltip: 'Open in a new tab',
+  /** Generic category name for all resources that could not be attributed to a 1st or 3rd party entity. */
+  unattributable: 'Unattributable',
 };
 
 export {

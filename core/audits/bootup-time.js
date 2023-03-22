@@ -117,8 +117,6 @@ class BootupTime extends Audit {
       runWarnings = [str_(UIStrings.chromeExtensionsWarning)];
     }
 
-    const summary = {wastedMs: totalBootupTime};
-
     /** @type {LH.Audit.Details.Table['headings']} */
     const headings = [
       {key: 'url', valueType: 'url', label: str_(i18n.UIStrings.columnURL)},
@@ -128,7 +126,8 @@ class BootupTime extends Audit {
         label: str_(UIStrings.columnScriptParse)},
     ];
 
-    const details = BootupTime.makeTableDetails(headings, results, summary);
+    const details = BootupTime.makeTableDetails(headings, results,
+      {wastedMs: totalBootupTime, sortedBy: ['total']});
 
     const score = Audit.computeLogNormalScore(
       {p10: context.options.p10, median: context.options.median},

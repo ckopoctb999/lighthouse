@@ -29,6 +29,7 @@ const WASTED_MS_FOR_SCORE_OF_ZERO = 5000;
  * @property {LH.IcuMessage} [displayValue]
  * @property {LH.IcuMessage} [explanation]
  * @property {Array<string | LH.IcuMessage>} [warnings]
+ * @property {Array<string>} [sortedBy]
  */
 
 /**
@@ -228,8 +229,9 @@ class ByteEfficiencyAudit extends Audit {
       displayValue = str_(i18n.UIStrings.displayValueByteSavings, {wastedBytes});
     }
 
+    const sortedBy = result.sortedBy || ['wastedBytes'];
     const details = Audit.makeOpportunityDetails(result.headings, results,
-      {overallSavingsMs: wastedMs, overallSavingsBytes: wastedBytes});
+      {overallSavingsMs: wastedMs, overallSavingsBytes: wastedBytes, sortedBy});
 
     return {
       explanation: result.explanation,

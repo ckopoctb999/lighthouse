@@ -164,7 +164,8 @@ class TimingBudget extends Audit {
     ];
 
     return {
-      details: Audit.makeTableDetails(headers, this.tableItems(budget, summary)),
+      details: Audit.makeTableDetails(headers, this.tableItems(budget, summary),
+      {sortedBy: ['overBudget']}),
       score: 1,
     };
   }

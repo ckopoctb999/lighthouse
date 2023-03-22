@@ -533,6 +533,9 @@
                   "groupLabel": "Script Parsing & Compilation",
                   "duration": 25.208000000000006
                 }
+              ],
+              "sortedBy": [
+                "duration"
               ]
             }
           },
@@ -594,7 +597,10 @@
               ],
               "summary": {
                 "wastedMs": 288.41200000000015
-              }
+              },
+              "sortedBy": [
+                "total"
+              ]
             }
           },
           "uses-rel-preload": {
@@ -624,7 +630,10 @@
               "type": "opportunity",
               "headings": [],
               "items": [],
-              "overallSavingsMs": 0
+              "overallSavingsMs": 0,
+              "sortedBy": [
+                "wastedMs"
+              ]
             }
           },
           "font-display": {
@@ -1135,6 +1144,9 @@
                   "origin": "https://fonts.gstatic.com",
                   "rtt": 3.406000000000006
                 }
+              ],
+              "sortedBy": [
+                "rtt"
               ]
             }
           },
@@ -1179,6 +1191,9 @@
                   "origin": "https://events.mikescerealshack.co",
                   "serverResponseTime": 3.7920000000000016
                 }
+              ],
+              "sortedBy": [
+                "serverResponseTime"
               ]
             }
           },
@@ -1460,7 +1475,8 @@
               "summary": {
                 "wastedBytes": 20174,
                 "wastedMs": 0
-              }
+              },
+              "isEntityGrouped": true
             }
           },
           "third-party-facades": {
@@ -1710,6 +1726,12 @@
                   "duration": 96,
                   "startTime": 965.8119999999999
                 }
+              ],
+              "sortedBy": [
+                "duration"
+              ],
+              "skipSumming": [
+                "startTime"
               ]
             }
           },
@@ -1778,7 +1800,7 @@
           "valid-source-maps": {
             "id": "valid-source-maps",
             "title": "Page has valid source maps",
-            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps).",
+            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developer.chrome.com/docs/devtools/javascript/source-maps/).",
             "score": 1,
             "scoreDisplayMode": "binary",
             "details": {
@@ -1801,6 +1823,9 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
+              "sortedBy": [
+                "wastedMs"
+              ],
               "debugData": {
                 "type": "debugdata",
                 "initiatorPath": [
@@ -2521,6 +2546,9 @@
                   "url": "https://www.mikescerealshack.co/_next/static/css/08dcb440d7d83b488817.css",
                   "totalBytes": 4994
                 }
+              ],
+              "sortedBy": [
+                "totalBytes"
               ]
             }
           },
@@ -2539,7 +2567,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "render-blocking-resources": {
@@ -2571,7 +2602,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unminified-javascript": {
@@ -2589,7 +2623,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unused-css-rules": {
@@ -2606,7 +2643,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unused-javascript": {
@@ -2623,7 +2663,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "modern-image-formats": {
@@ -2641,7 +2684,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-optimized-images": {
@@ -2659,7 +2705,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-text-compression": {
@@ -2676,7 +2725,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-responsive-images": {
@@ -2693,7 +2745,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "efficient-animated-content": {
@@ -2710,7 +2765,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "duplicated-javascript": {
@@ -2727,7 +2785,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "legacy-javascript": {
@@ -2788,7 +2849,10 @@
                 }
               ],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 57
+              "overallSavingsBytes": 57,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "doctype": {
@@ -3133,7 +3197,7 @@
           "tap-targets": {
             "id": "tap-targets",
             "title": "Tap targets are sized appropriately",
-            "description": "Interactive elements like buttons and links should be large enough (48x48px), and have enough space around them, to be easy enough to tap without overlapping onto other elements. [Learn more about tap targets](https://developer.chrome.com/docs/lighthouse/seo/tap-targets/).",
+            "description": "Interactive elements like buttons and links should be large enough (48x48px), or have enough space around them, to be easy enough to tap without overlapping onto other elements. [Learn more about tap targets](https://developer.chrome.com/docs/lighthouse/seo/tap-targets/).",
             "score": 1,
             "scoreDisplayMode": "binary",
             "displayValue": "100% appropriately sized tap targets",
@@ -4200,7 +4264,8 @@
             "origins": [
               "https://fonts.googleapis.com",
               "https://fonts.gstatic.com"
-            ]
+            ],
+            "category": "cdn"
           }
         ],
         "fullPageScreenshot": {
@@ -6042,12 +6107,14 @@
             "errorLabel": "Error!",
             "errorMissingAuditInfo": "Report error: no audit information",
             "expandView": "Expand view",
+            "firstPartyChipLabel": "1st party",
             "footerIssue": "File an issue",
             "hide": "Hide",
             "labDataTitle": "Lab Data",
             "lsPerformanceCategoryDescription": "[Lighthouse](https://developers.google.com/web/tools/lighthouse/) analysis of the current page on an emulated mobile network. Values are estimated and may vary.",
             "manualAuditsGroupTitle": "Additional items to manually check",
             "notApplicableAuditsGroupTitle": "Not applicable",
+            "openInANewTabTooltip": "Open in a new tab",
             "opportunityResourceColumnLabel": "Opportunity",
             "opportunitySavingsColumnLabel": "Estimated Savings",
             "passedAuditsGroupTitle": "Passed audits",
@@ -6074,6 +6141,7 @@
             "thirdPartyResourcesLabel": "Show 3rd-party resources",
             "throttlingProvided": "Provided by environment",
             "toplevelWarningsMessage": "There were issues affecting this run of Lighthouse:",
+            "unattributable": "Unattributable",
             "varianceDisclaimer": "Values are estimated and may vary. The [performance score is calculated](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) directly from these metrics.",
             "viewOriginalTraceLabel": "View Original Trace",
             "viewTraceLabel": "View Trace",
@@ -7842,6 +7910,9 @@
                   "groupLabel": "Script Parsing & Compilation",
                   "duration": 1.264
                 }
+              ],
+              "sortedBy": [
+                "duration"
               ]
             }
           },
@@ -7903,7 +7974,10 @@
               ],
               "summary": {
                 "wastedMs": 352.6489999999996
-              }
+              },
+              "sortedBy": [
+                "total"
+              ]
             }
           },
           "network-requests": {
@@ -8264,6 +8338,9 @@
                   "origin": "https://cdn.mikescerealshack.co",
                   "rtt": 5.454999999999998
                 }
+              ],
+              "sortedBy": [
+                "rtt"
               ]
             }
           },
@@ -8304,6 +8381,9 @@
                   "origin": "https://mnl4bjjsnz-dsn.algolia.net",
                   "serverResponseTime": 0
                 }
+              ],
+              "sortedBy": [
+                "serverResponseTime"
               ]
             }
           },
@@ -8597,7 +8677,8 @@
               "summary": {
                 "wastedBytes": 25328,
                 "wastedMs": 0
-              }
+              },
+              "isEntityGrouped": true
             }
           },
           "layout-shift-elements": {
@@ -8679,6 +8760,12 @@
                   "duration": 172.833,
                   "startTime": 1903.231
                 }
+              ],
+              "sortedBy": [
+                "duration"
+              ],
+              "skipSumming": [
+                "startTime"
               ]
             }
           },
@@ -8747,7 +8834,7 @@
           "valid-source-maps": {
             "id": "valid-source-maps",
             "title": "Page has valid source maps",
-            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps).",
+            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developer.chrome.com/docs/devtools/javascript/source-maps/).",
             "score": 1,
             "scoreDisplayMode": "binary",
             "details": {
@@ -8926,7 +9013,13 @@
               ],
               "summary": {
                 "wastedBytes": 21491.399999999998
-              }
+              },
+              "sortedBy": [
+                "totalBytes"
+              ],
+              "skipSumming": [
+                "cacheLifetimeMs"
+              ]
             }
           },
           "total-byte-weight": {
@@ -8993,6 +9086,9 @@
                   "url": "https://cdn.mikescerealshack.co/frames/s8/e13/128w/b997cdb40263ff124e2a245c5e86a9a3.jpg",
                   "totalBytes": 3142
                 }
+              ],
+              "sortedBy": [
+                "totalBytes"
               ]
             }
           },
@@ -9010,7 +9106,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unminified-javascript": {
@@ -9028,7 +9127,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unused-css-rules": {
@@ -9045,7 +9147,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unused-javascript": {
@@ -9062,7 +9167,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "modern-image-formats": {
@@ -9080,7 +9188,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-optimized-images": {
@@ -9098,7 +9209,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-text-compression": {
@@ -9115,7 +9229,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-responsive-images": {
@@ -9132,7 +9249,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "efficient-animated-content": {
@@ -9149,7 +9269,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "duplicated-javascript": {
@@ -9166,7 +9289,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "legacy-javascript": {
@@ -9183,7 +9309,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "inspector-issues": {
@@ -9386,6 +9515,9 @@
                         ]
                       }
                     }
+                  ],
+                  "sortedBy": [
+                    "total"
                   ]
                 },
                 {
@@ -9809,7 +9941,8 @@
             "homepage": "https://www.algolia.com/",
             "origins": [
               "https://mnl4bjjsnz-dsn.algolia.net"
-            ]
+            ],
+            "category": "utility"
           }
         ],
         "fullPageScreenshot": {
@@ -10491,12 +10624,14 @@
             "errorLabel": "Error!",
             "errorMissingAuditInfo": "Report error: no audit information",
             "expandView": "Expand view",
+            "firstPartyChipLabel": "1st party",
             "footerIssue": "File an issue",
             "hide": "Hide",
             "labDataTitle": "Lab Data",
             "lsPerformanceCategoryDescription": "[Lighthouse](https://developers.google.com/web/tools/lighthouse/) analysis of the current page on an emulated mobile network. Values are estimated and may vary.",
             "manualAuditsGroupTitle": "Additional items to manually check",
             "notApplicableAuditsGroupTitle": "Not applicable",
+            "openInANewTabTooltip": "Open in a new tab",
             "opportunityResourceColumnLabel": "Opportunity",
             "opportunitySavingsColumnLabel": "Estimated Savings",
             "passedAuditsGroupTitle": "Passed audits",
@@ -10523,6 +10658,7 @@
             "thirdPartyResourcesLabel": "Show 3rd-party resources",
             "throttlingProvided": "Provided by environment",
             "toplevelWarningsMessage": "There were issues affecting this run of Lighthouse:",
+            "unattributable": "Unattributable",
             "varianceDisclaimer": "Values are estimated and may vary. The [performance score is calculated](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) directly from these metrics.",
             "viewOriginalTraceLabel": "View Original Trace",
             "viewTraceLabel": "View Trace",
@@ -13203,7 +13339,7 @@
           "tap-targets": {
             "id": "tap-targets",
             "title": "Tap targets are not sized appropriately",
-            "description": "Interactive elements like buttons and links should be large enough (48x48px), and have enough space around them, to be easy enough to tap without overlapping onto other elements. [Learn more about tap targets](https://developer.chrome.com/docs/lighthouse/seo/tap-targets/).",
+            "description": "Interactive elements like buttons and links should be large enough (48x48px), or have enough space around them, to be easy enough to tap without overlapping onto other elements. [Learn more about tap targets](https://developer.chrome.com/docs/lighthouse/seo/tap-targets/).",
             "score": 0.76,
             "scoreDisplayMode": "binary",
             "displayValue": "86% appropriately sized tap targets",
@@ -15064,12 +15200,14 @@
             "errorLabel": "Error!",
             "errorMissingAuditInfo": "Report error: no audit information",
             "expandView": "Expand view",
+            "firstPartyChipLabel": "1st party",
             "footerIssue": "File an issue",
             "hide": "Hide",
             "labDataTitle": "Lab Data",
             "lsPerformanceCategoryDescription": "[Lighthouse](https://developers.google.com/web/tools/lighthouse/) analysis of the current page on an emulated mobile network. Values are estimated and may vary.",
             "manualAuditsGroupTitle": "Additional items to manually check",
             "notApplicableAuditsGroupTitle": "Not applicable",
+            "openInANewTabTooltip": "Open in a new tab",
             "opportunityResourceColumnLabel": "Opportunity",
             "opportunitySavingsColumnLabel": "Estimated Savings",
             "passedAuditsGroupTitle": "Passed audits",
@@ -15096,6 +15234,7 @@
             "thirdPartyResourcesLabel": "Show 3rd-party resources",
             "throttlingProvided": "Provided by environment",
             "toplevelWarningsMessage": "There were issues affecting this run of Lighthouse:",
+            "unattributable": "Unattributable",
             "varianceDisclaimer": "Values are estimated and may vary. The [performance score is calculated](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) directly from these metrics.",
             "viewOriginalTraceLabel": "View Original Trace",
             "viewTraceLabel": "View Trace",
@@ -16290,6 +16429,9 @@
                   "groupLabel": "Rendering",
                   "duration": 14.543999999999997
                 }
+              ],
+              "sortedBy": [
+                "duration"
               ]
             }
           },
@@ -16357,7 +16499,10 @@
               ],
               "summary": {
                 "wastedMs": 169.10399999999998
-              }
+              },
+              "sortedBy": [
+                "total"
+              ]
             }
           },
           "uses-rel-preload": {
@@ -16387,7 +16532,10 @@
               "type": "opportunity",
               "headings": [],
               "items": [],
-              "overallSavingsMs": 0
+              "overallSavingsMs": 0,
+              "sortedBy": [
+                "wastedMs"
+              ]
             }
           },
           "font-display": {
@@ -16868,6 +17016,9 @@
                   "origin": "https://fonts.gstatic.com",
                   "rtt": 0.003
                 }
+              ],
+              "sortedBy": [
+                "rtt"
               ]
             }
           },
@@ -16912,6 +17063,9 @@
                   "origin": "https://fonts.gstatic.com",
                   "serverResponseTime": 0.874
                 }
+              ],
+              "sortedBy": [
+                "serverResponseTime"
               ]
             }
           },
@@ -17168,7 +17322,8 @@
                     "items": []
                   }
                 }
-              ]
+              ],
+              "isEntityGrouped": true
             }
           },
           "third-party-facades": {
@@ -17304,6 +17459,12 @@
                   "duration": 63,
                   "startTime": 752.7026
                 }
+              ],
+              "sortedBy": [
+                "duration"
+              ],
+              "skipSumming": [
+                "startTime"
               ]
             }
           },
@@ -17391,7 +17552,7 @@
           "valid-source-maps": {
             "id": "valid-source-maps",
             "title": "Page has valid source maps",
-            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developers.google.com/web/tools/chrome-devtools/javascript/source-maps).",
+            "description": "Source maps translate minified code to the original source code. This helps developers debug in production. In addition, Lighthouse is able to provide further insights. Consider deploying source maps to take advantage of these benefits. [Learn more about source maps](https://developer.chrome.com/docs/devtools/javascript/source-maps/).",
             "score": 1,
             "scoreDisplayMode": "binary",
             "details": {
@@ -17414,6 +17575,9 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
+              "sortedBy": [
+                "wastedMs"
+              ],
               "debugData": {
                 "type": "debugdata",
                 "initiatorPath": [
@@ -18151,6 +18315,9 @@
                   "url": "https://www.mikescerealshack.co/logo-text.svg",
                   "totalBytes": 44
                 }
+              ],
+              "sortedBy": [
+                "totalBytes"
               ]
             }
           },
@@ -18169,7 +18336,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "render-blocking-resources": {
@@ -18201,7 +18371,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unminified-javascript": {
@@ -18219,7 +18392,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unused-css-rules": {
@@ -18236,7 +18412,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "unused-javascript": {
@@ -18253,7 +18432,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "modern-image-formats": {
@@ -18317,7 +18499,10 @@
                 }
               ],
               "overallSavingsMs": 300,
-              "overallSavingsBytes": 68889.75
+              "overallSavingsBytes": 68889.75,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-optimized-images": {
@@ -18335,7 +18520,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-text-compression": {
@@ -18352,7 +18540,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "uses-responsive-images": {
@@ -18413,7 +18604,10 @@
                 }
               ],
               "overallSavingsMs": 300,
-              "overallSavingsBytes": 52102
+              "overallSavingsBytes": 52102,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "efficient-animated-content": {
@@ -18430,7 +18624,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "duplicated-javascript": {
@@ -18447,7 +18644,10 @@
               "headings": [],
               "items": [],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "legacy-javascript": {
@@ -18508,7 +18708,10 @@
                 }
               ],
               "overallSavingsMs": 0,
-              "overallSavingsBytes": 0
+              "overallSavingsBytes": 0,
+              "sortedBy": [
+                "wastedBytes"
+              ]
             }
           },
           "doctype": {
@@ -18853,7 +19056,7 @@
           "tap-targets": {
             "id": "tap-targets",
             "title": "Tap targets are not sized appropriately",
-            "description": "Interactive elements like buttons and links should be large enough (48x48px), and have enough space around them, to be easy enough to tap without overlapping onto other elements. [Learn more about tap targets](https://developer.chrome.com/docs/lighthouse/seo/tap-targets/).",
+            "description": "Interactive elements like buttons and links should be large enough (48x48px), or have enough space around them, to be easy enough to tap without overlapping onto other elements. [Learn more about tap targets](https://developer.chrome.com/docs/lighthouse/seo/tap-targets/).",
             "score": 0.67,
             "scoreDisplayMode": "binary",
             "displayValue": "75% appropriately sized tap targets",
@@ -19977,7 +20180,8 @@
             "origins": [
               "https://fonts.googleapis.com",
               "https://fonts.gstatic.com"
-            ]
+            ],
+            "category": "cdn"
           }
         ],
         "fullPageScreenshot": {
@@ -21793,12 +21997,14 @@
             "errorLabel": "Error!",
             "errorMissingAuditInfo": "Report error: no audit information",
             "expandView": "Expand view",
+            "firstPartyChipLabel": "1st party",
             "footerIssue": "File an issue",
             "hide": "Hide",
             "labDataTitle": "Lab Data",
             "lsPerformanceCategoryDescription": "[Lighthouse](https://developers.google.com/web/tools/lighthouse/) analysis of the current page on an emulated mobile network. Values are estimated and may vary.",
             "manualAuditsGroupTitle": "Additional items to manually check",
             "notApplicableAuditsGroupTitle": "Not applicable",
+            "openInANewTabTooltip": "Open in a new tab",
             "opportunityResourceColumnLabel": "Opportunity",
             "opportunitySavingsColumnLabel": "Estimated Savings",
             "passedAuditsGroupTitle": "Passed audits",
@@ -21825,6 +22031,7 @@
             "thirdPartyResourcesLabel": "Show 3rd-party resources",
             "throttlingProvided": "Provided by environment",
             "toplevelWarningsMessage": "There were issues affecting this run of Lighthouse:",
+            "unattributable": "Unattributable",
             "varianceDisclaimer": "Values are estimated and may vary. The [performance score is calculated](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring/) directly from these metrics.",
             "viewOriginalTraceLabel": "View Original Trace",
             "viewTraceLabel": "View Trace",

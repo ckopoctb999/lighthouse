@@ -193,7 +193,7 @@ class WorkDuringInteraction extends Audit {
     ];
 
     return {
-      table: Audit.makeTableDetails(headings, items),
+      table: Audit.makeTableDetails(headings, items, {sortedBy: ['total']}),
       phases,
     };
   }

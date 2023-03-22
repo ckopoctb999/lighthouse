@@ -240,7 +240,7 @@ class UsesRelPreloadAudit extends Audit {
       {key: 'wastedMs', valueType: 'timespanMs', label: str_(i18n.UIStrings.columnWastedMs)},
     ];
     const details = Audit.makeOpportunityDetails(headings, results,
-      {overallSavingsMs: wastedMs});
+      {overallSavingsMs: wastedMs, sortedBy: ['wastedMs']});
 
     return {
       score: ByteEfficiencyAudit.scoreForWastedMs(wastedMs),

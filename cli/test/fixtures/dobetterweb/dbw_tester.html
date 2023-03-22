@@ -158,7 +158,7 @@
   // Ensure long-task collection still works when performance.now is redefined
   window.performance.now = 'right now';
 
-  // Ensure bounding rectangles still work when getBoundingClientRect is overriden.
+  // Ensure bounding rectangles still work when getBoundingClientRect is overridden.
   window.HTMLElement.prototype.getBoundingClientRect = function() {
     return {top: '', left: ''};
   };

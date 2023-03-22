@@ -234,7 +234,7 @@ class UsesRelPreconnectAudit extends Audit {
     ];
 
     const details = Audit.makeOpportunityDetails(headings, results,
-      {overallSavingsMs: maxWasted});
+      {overallSavingsMs: maxWasted, sortedBy: ['wastedMs']});
 
     return {
       score: ByteEfficiencyAudit.scoreForWastedMs(maxWasted),

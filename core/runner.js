@@ -170,6 +170,7 @@ class Runner {
       // Reduce payload size in LHR JSON by omitting whats falsy.
       if (entity === classifiedEntities.firstParty) shortEntity.isFirstParty = true;
       if (entity.isUnrecognized) shortEntity.isUnrecognized = true;
+      if (entity.category) shortEntity.category = entity.category;
       entities.push(shortEntity);
     }
 

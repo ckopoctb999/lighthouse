@@ -115,7 +115,7 @@ async function begin() {
   }
 
   // By default, cliFlags.enableErrorReporting is undefined so the user is
-  // prompted. This can be overriden with an explicit flag or by the cached
+  // prompted. This can be overridden with an explicit flag or by the cached
   // answer returned by askPermission().
   if (typeof cliFlags.enableErrorReporting === 'undefined') {
     cliFlags.enableErrorReporting = await askPermission();
