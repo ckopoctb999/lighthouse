@@ -106,7 +106,7 @@ function collectAnchorElements() {
 
     return {
       href: resolveURLOrEmpty(node.href.baseVal),
-      rawHref: node.getAttribute('href') || node.getAttribute('xlink:href') || '',
+      rawHref: node.getAttribute('href') || '',
       onclick: getTruncatedOnclick(node),
       role: node.getAttribute('role') || '',
       text: node.textContent || '',
