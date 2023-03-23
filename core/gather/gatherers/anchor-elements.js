@@ -45,17 +45,9 @@ function collectAnchorElements() {
     let innerElsWithLang;
     let innerTextEqualsLinkText;
 
-    if (node instanceof HTMLAnchorElement) {
-      parentLangEl = node.closest('[lang]');
-      linkLang = !parentLangEl ? '' : parentLangEl.lang;
-      innerElsWithLang = node.querySelectorAll('[lang]');
-    } else {
-      parentLangEl = node.closest('[*|lang]');
-      linkLang = !parentLangEl ? ''
-        : parentLangEl.getAttribute('lang') ||
-          parentLangEl.getAttribute('xml:lang');
-      innerElsWithLang = node.querySelectorAll('[*|lang]');
-    }
+    parentLangEl = node.closest('[lang]');
+    linkLang = !parentLangEl ? '' : parentLangEl.getAttribute('lang');
+    innerElsWithLang = node.querySelectorAll('[lang]');
 
     let innerTextLang = linkLang;
 
@@ -71,8 +63,7 @@ function collectAnchorElements() {
           innerTextEqualsLinkText = firstEl.textContent.trim() === node.textContent.trim();
         }
         if (innerTextEqualsLinkText) {
-          innerTextLang = innerElsWithLang[0].getAttribute('lang') ||
-            innerElsWithLang[0].getAttribute('xml:lang');
+          innerTextLang = innerElsWithLang[0].getAttribute('lang');
         } else {
           // TODO: not sure, what to do
           innerTextLang = '';
