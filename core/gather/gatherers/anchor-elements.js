@@ -40,14 +40,14 @@ function collectAnchorElements() {
 
   /** @param {HTMLAnchorElement|SVGAElement} node */
   function getTextLang(node) {
-    let parentLangEl;
-    let linkLang;
-    let innerElsWithLang;
     let innerTextEqualsLinkText;
 
-    parentLangEl = node.closest('[lang]');
-    linkLang = !parentLangEl ? '' : parentLangEl.getAttribute('lang');
-    innerElsWithLang = node.querySelectorAll('[lang]');
+    const parentWithLang = node.closest('[lang]');
+
+    // TODO: fallbacks to pragma-set-default-language or HTTP header
+    const linkLang = !parentWithLang ? '' : parentWithLang.getAttribute('lang');
+
+    const innerElsWithLang = node.querySelectorAll('[lang]');
 
     let innerTextLang = linkLang;
 
