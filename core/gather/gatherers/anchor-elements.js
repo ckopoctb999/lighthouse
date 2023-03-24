@@ -38,34 +38,46 @@ function collectAnchorElements() {
     return onclick.slice(0, 1024);
   }
 
+  /** @param {HTMLElement|SVGElement|Text} node */
+  function getTrimmedInnerText(node) {
+    return node instanceof HTMLElement
+      ? node.innerText.trim()
+      : node.textContent.trim();
+  }
+
   /** @param {HTMLAnchorElement|SVGAElement} node */
-  function getTextLang(node) {
-    let innerTextEqualsLinkText;
+  function getTextLang(node, currentLang = '') {
+    if (!currentLang) {
+      const parentWithLang = node.closest('[lang]');
 
-    const parentWithLang = node.closest('[lang]');
-
-    // TODO: fallbacks to pragma-set-default-language or HTTP header
-    const linkLang = !parentWithLang ? '' : parentWithLang.getAttribute('lang');
+      // TODO: fallbacks to pragma-set-default-language or HTTP header
+      currentLang = !parentWithLang ? '' : parentWithLang.getAttribute('lang');
+    }
 
     const innerElsWithLang = node.querySelectorAll('[lang]');
 
-    let innerTextLang = linkLang;
+    let innerTextLang = currentLang;
 
     if (innerElsWithLang.length) {
-      if (innerElsWithLang.length > 1) {
-        // TODO: not sure, what to do with mixed languages in link text
-        innerTextLang = '';
-      } else {
-        const firstEl = innerElsWithLang[0];
-        if (node instanceof HTMLAnchorElement) {
-          innerTextEqualsLinkText = firstEl.innerText.trim() === node.innerText.trim();
+      const innerText = getTrimmedInnerText(node);
+
+      for (const el of node.childNodes) {
+        if (innerText === getTrimmedInnerText(el)) {
+          if (el instanceof HTMLElement || el instanceof SVGElement) {
+            const elLang = el.getAttribute('lang');
+            const childrenWithLang = el.querySelectorAll('[lang]');
+
+            if (!childrenWithLang.length) {
+              innerTextLang = elLang || currentLang;
+              break;
+            } else {
+              // recursive call
+              innerTextLang = getTextLang(el, elLang || currentLang);
+            }
+          } else {
+            innerTextLang = currentLang;
+          }
         } else {
-          innerTextEqualsLinkText = firstEl.textContent.trim() === node.textContent.trim();
-        }
-        if (innerTextEqualsLinkText) {
-          innerTextLang = innerElsWithLang[0].getAttribute('lang');
-        } else {
-          // TODO: not sure, what to do
           innerTextLang = '';
         }
       }
