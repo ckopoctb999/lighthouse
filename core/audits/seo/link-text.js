@@ -148,11 +148,14 @@ class LinkText extends Audit {
           return false;
         }
 
-        // TODO: proper language code check
-        const lang = link.textLang ? (link.textLang.split('-'))[0] : '';
-
-        if (lang && nonDescriptiveLinkTexts[lang]) {
-          return nonDescriptiveLinkTexts[lang].has(link.text.trim().toLowerCase());
+        // walk through lang code, e. g. "en-US" or "zh-cmn-Hans-CN"
+        let lang = link.textLang;
+        while (lang) {
+          if (nonDescriptiveLinkTexts[lang] &&
+            nonDescriptiveLinkTexts[lang].has(link.text.trim().toLowerCase())) {
+            return true;
+          }
+          lang = lang.substring(0, lang.lastIndexOf('-'));
         }
 
         return false;
