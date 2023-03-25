@@ -148,14 +148,18 @@ class LinkText extends Audit {
           return false;
         }
 
-        // walk through lang code, e. g. "en-US" or "zh-cmn-Hans-CN"
-        let lang = link.textLang;
-        while (lang) {
-          if (nonDescriptiveLinkTexts[lang] &&
-            nonDescriptiveLinkTexts[lang].has(link.text.trim().toLowerCase())) {
-            return true;
+        const searchTerm = link.text.trim().toLowerCase();
+
+        if (searchTerm) {
+          // walk through lang code, e. g. "en-US" or "zh-cmn-Hans-CN"
+          let lang = link.textLang;
+          while (lang) {
+            if (nonDescriptiveLinkTexts[lang] &&
+              nonDescriptiveLinkTexts[lang].has(searchTerm)) {
+              return true;
+            }
+            lang = lang.substring(0, lang.lastIndexOf('-'));
           }
-          lang = lang.substring(0, lang.lastIndexOf('-'));
         }
 
         return false;
