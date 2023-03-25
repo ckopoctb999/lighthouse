@@ -38,14 +38,17 @@ function collectAnchorElements() {
     return onclick.slice(0, 1024);
   }
 
-  /** @param {HTMLElement|SVGElement|Text} node */
+  /** @param {HTMLElement|SVGElement|Text|ChildNode} node */
   function getTrimmedInnerText(node) {
     return node instanceof HTMLElement
       ? node.innerText.trim()
-      : node.textContent.trim();
+      : (node.textContent ? node.textContent.trim() : '');
   }
 
-  /** @param {HTMLAnchorElement|SVGAElement} node */
+  /**
+   * @param {HTMLElement|SVGElement} node
+   * @param {string|null} currentLang
+   */
   function getTextLang(node, currentLang = null) {
     if (currentLang === null) {
       const parentWithLang = node.closest('[lang]');
