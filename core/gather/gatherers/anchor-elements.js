@@ -86,7 +86,7 @@ function collectAnchorElements() {
       }
     }
 
-    return innerTextLang;
+    return innerTextLang || '';
   }
 
   /** @type {Array<HTMLAnchorElement|SVGAElement>} */
@@ -116,7 +116,7 @@ function collectAnchorElements() {
       onclick: getTruncatedOnclick(node),
       role: node.getAttribute('role') || '',
       text: node.textContent || '',
-      textLang: getTextLang(node) || '',
+      textLang: getTextLang(node),
       rel: '',
       target: node.target.baseVal || '',
       // @ts-expect-error - getNodeDetails put into scope via stringification
