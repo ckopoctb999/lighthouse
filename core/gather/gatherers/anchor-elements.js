@@ -46,8 +46,8 @@ function collectAnchorElements() {
   }
 
   /** @param {HTMLAnchorElement|SVGAElement} node */
-  function getTextLang(node, currentLang = '') {
-    if (!currentLang) {
+  function getTextLang(node, currentLang = null) {
+    if (currentLang === null) {
       const parentWithLang = node.closest('[lang]');
 
       // TODO: fallbacks to pragma-set-default-language or HTTP header
