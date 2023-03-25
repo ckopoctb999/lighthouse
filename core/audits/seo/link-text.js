@@ -8,6 +8,8 @@ import {Audit} from '../audit.js';
 import UrlUtils from '../../lib/url-utils.js';
 import * as i18n from '../../lib/i18n/i18n.js';
 
+/** @typedef {{ [index: string]: Set<string> }} nonDescriptiveLinkTexts */
+/** @type { nonDescriptiveLinkTexts } */
 const nonDescriptiveLinkTexts = {
   // English
   'en': new Set([

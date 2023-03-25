@@ -406,6 +406,7 @@ declare module Artifacts {
     rawHref: string
     name?: string
     text: string
+    textLang?: string
     role: string
     target: string
     node: NodeDetails
