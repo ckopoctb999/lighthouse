@@ -137,8 +137,9 @@ class LinkText extends Audit {
    */
   static audit(artifacts) {
     const failingLinks = artifacts.AnchorElements
-      .filter(link => link.href && !link.rel.includes('nofollow'))
       .filter(link => {
+        if (!link.href || link.rel.includes('nofollow')) return false;
+
         const href = link.href.toLowerCase();
         if (
           href.startsWith('javascript:') ||
