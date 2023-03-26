@@ -93,6 +93,16 @@ function collectAnchorElements() {
   // @ts-expect-error - put into scope via stringification
   const anchorElements = getElementsInDocument('a'); // eslint-disable-line no-undef
 
+  // Check, if document has only one lang attribute in opening html tag. If so,
+  // there is no need to run the `getLangOfInnerText()` function with multiple
+  // possible DOM traversals
+  /** @type {Array<HTMLElement|SVGElement>} */
+  // @ts-expect-error - put into scope via stringification
+  const langElements = getElementsInDocument('[lang]'); // eslint-disable-line no-undef
+  const docHasOnlyHtmlLangAttr = (langElements.length === 1) &&
+    langElements[0].nodeName === 'HTML';
+  const lang = !docHasOnlyHtmlLangAttr ? null : langElements[0].getAttribute('lang');
+
   return anchorElements.map(node => {
     if (node instanceof HTMLAnchorElement) {
       return {
@@ -102,7 +112,7 @@ function collectAnchorElements() {
         role: node.getAttribute('role') || '',
         name: node.name,
         text: node.innerText, // we don't want to return hidden text, so use innerText
-        textLang: getLangOfInnerText(node),
+        textLang: lang || getLangOfInnerText(node),
         rel: node.rel,
         target: node.target,
         // @ts-expect-error - getNodeDetails put into scope via stringification
@@ -116,7 +126,7 @@ function collectAnchorElements() {
       onclick: getTruncatedOnclick(node),
       role: node.getAttribute('role') || '',
       text: node.textContent || '',
-      textLang: getLangOfInnerText(node),
+      textLang: lang || getLangOfInnerText(node),
       rel: '',
       target: node.target.baseVal || '',
       // @ts-expect-error - getNodeDetails put into scope via stringification
