@@ -48,8 +48,9 @@ function collectAnchorElements() {
   /**
    * @param {HTMLElement|SVGElement} node
    * @param {string|null} currentLang
+   * @return {string}
    */
-  function getTextLang(node, currentLang = null) {
+  function getLangOfInnerText(node, currentLang = null) {
     if (currentLang === null) {
       const parentWithLang = node.closest('[lang]');
 
@@ -59,30 +60,29 @@ function collectAnchorElements() {
 
     const innerElsWithLang = node.querySelectorAll('[lang]');
 
+    if (!innerElsWithLang.length) return currentLang || '';
+
+    const innerText = getTrimmedInnerText(node);
+
     let innerTextLang = currentLang;
 
-    if (innerElsWithLang.length) {
-      const innerText = getTrimmedInnerText(node);
-
-      for (const el of node.childNodes) {
-        if (innerText === getTrimmedInnerText(el)) {
-          if (el instanceof HTMLElement || el instanceof SVGElement) {
-            const elLang = el.getAttribute('lang');
-            const childrenWithLang = el.querySelectorAll('[lang]');
-
-            if (!childrenWithLang.length) {
-              innerTextLang = elLang || currentLang;
-              break;
-            } else {
-              // recursive call
-              innerTextLang = getTextLang(el, elLang || currentLang);
-            }
-          } else {
-            innerTextLang = currentLang;
-          }
-        } else {
-          innerTextLang = '';
+    for (const el of node.childNodes) {
+      if (innerText === getTrimmedInnerText(el)) {
+        if (!(el instanceof HTMLElement || el instanceof SVGElement)) {
+          return currentLang || '';
         }
+
+        const elLang = el.getAttribute('lang');
+        const childrenWithLang = el.querySelectorAll('[lang]');
+
+        if (!childrenWithLang.length) {
+          return elLang || currentLang || '';
+        } else {
+          // recursive call
+          return getLangOfInnerText(el, elLang || currentLang || '');
+        }
+      } else {
+        innerTextLang = '';
       }
     }
 
@@ -102,7 +102,7 @@ function collectAnchorElements() {
         role: node.getAttribute('role') || '',
         name: node.name,
         text: node.innerText, // we don't want to return hidden text, so use innerText
-        textLang: getTextLang(node),
+        textLang: getLangOfInnerText(node),
         rel: node.rel,
         target: node.target,
         // @ts-expect-error - getNodeDetails put into scope via stringification
@@ -116,7 +116,7 @@ function collectAnchorElements() {
       onclick: getTruncatedOnclick(node),
       role: node.getAttribute('role') || '',
       text: node.textContent || '',
-      textLang: getTextLang(node),
+      textLang: getLangOfInnerText(node),
       rel: '',
       target: node.target.baseVal || '',
       // @ts-expect-error - getNodeDetails put into scope via stringification
