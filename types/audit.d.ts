@@ -82,7 +82,7 @@ declare module Audit {
     details?: AuditDetails;
     /** If an audit encounters unusual execution circumstances, strings can be put in this optional array to add top-level warnings to the LHR. */
     runWarnings?: Array<IcuMessage>;
-    /** Estimates of how much this audit affects various performance metrics. Values will be in the init of their respective metrics. */
+    /** Estimates of how much this audit affects various performance metrics. Values will be in the unit of the respective metrics. */
     metricSavings?: MetricSavings;
   }
 
