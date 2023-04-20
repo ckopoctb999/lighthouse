@@ -70,10 +70,11 @@ class ServerResponseTime extends Audit {
       {key: 'responseTime', valueType: 'timespanMs', label: str_(i18n.UIStrings.columnTimeSpent)},
     ];
 
+    const overallSavingsMs = Math.max(responseTime - TARGET_MS, 0);
     const details = Audit.makeOpportunityDetails(
       headings,
       [{url: mainResource.url, responseTime}],
-      {overallSavingsMs: responseTime - TARGET_MS}
+      {overallSavingsMs}
     );
 
     return {
@@ -82,6 +83,10 @@ class ServerResponseTime extends Audit {
       score: Number(passed),
       displayValue,
       details,
+      metricSavings: {
+        FCP: overallSavingsMs,
+        LCP: overallSavingsMs,
+      },
     };
   }
 }

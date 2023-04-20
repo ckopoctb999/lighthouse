@@ -252,9 +252,6 @@ class ThirdPartySummary extends Audit {
         timeInMs: overallSummary.wastedMs,
       }),
       details,
-      metricSavings: {
-        TBT: overallSummary.wastedMs,
-      },
     };
   }
 }

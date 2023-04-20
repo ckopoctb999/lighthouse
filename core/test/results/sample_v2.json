@@ -337,6 +337,10 @@
           }
         ],
         "overallSavingsMs": 468.46799999999996
+      },
+      "metricSavings": {
+        "FCP": 468.46799999999996,
+        "LCP": 468.46799999999996
       }
     },
     "interactive": {
@@ -2236,9 +2240,6 @@
           "wastedMs": 0
         },
         "isEntityGrouped": true
-      },
-      "metricSavings": {
-        "TBT": 0
       }
     },
     "third-party-facades": {
