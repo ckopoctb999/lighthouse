@@ -1477,6 +1477,9 @@
                 "wastedMs": 0
               },
               "isEntityGrouped": true
+            },
+            "metricSavings": {
+              "TBT": 0
             }
           },
           "third-party-facades": {
@@ -8679,6 +8682,9 @@
                 "wastedMs": 0
               },
               "isEntityGrouped": true
+            },
+            "metricSavings": {
+              "TBT": 0
             }
           },
           "layout-shift-elements": {
@@ -17324,6 +17330,9 @@
                 }
               ],
               "isEntityGrouped": true
+            },
+            "metricSavings": {
+              "TBT": 0
             }
           },
           "third-party-facades": {

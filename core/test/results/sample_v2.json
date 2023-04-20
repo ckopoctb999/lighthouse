@@ -2236,6 +2236,9 @@
           "wastedMs": 0
         },
         "isEntityGrouped": true
+      },
+      "metricSavings": {
+        "TBT": 0
       }
     },
     "third-party-facades": {
