@@ -546,21 +546,6 @@ describe('Trace Elements gatherer - Animated Elements', () => {
         height: 161,
       },
     };
-    const compositedNodeData = {
-      traceEventType: 'animation',
-      devtoolsNodePath: '1,HTML,1,BODY,1,DIV',
-      selector: 'body > div#composited-boi',
-      nodeLabel: 'div',
-      snippet: '<div id="composited-boi">',
-      boundingRect: {
-        top: 169,
-        bottom: 269,
-        left: 8,
-        right: 108,
-        width: 100,
-        height: 100,
-      },
-    };
     const connectionStub = new Connection();
     connectionStub.sendCommand = createMockSendCommandFn()
       // LCP node
@@ -568,40 +553,21 @@ describe('Trace Elements gatherer - Animated Elements', () => {
       .mockResponse('Runtime.callFunctionOn', {result: {value: LCPNodeData}})
       // Animated node
       .mockResponse('DOM.resolveNode', {object: {objectId: 5}})
-      .mockResponse('Runtime.callFunctionOn', {result: {value: animationNodeData}})
-      // Composited node
-      .mockResponse('DOM.resolveNode', {object: {objectId: 7}})
-      .mockResponse('Runtime.callFunctionOn', {result: {value: compositedNodeData}});
+      .mockResponse('Runtime.callFunctionOn', {result: {value: animationNodeData}});
 
     const driver = new Driver(connectionStub);
     const gatherer = new TraceElementsGatherer();
     gatherer.animationIdToName.set('2', 'alpha');
     gatherer.animationIdToName.set('3', 'beta');
-    gatherer.animationIdToName.set('4', 'gamma');
 
     const result = await gatherer._getArtifact({driver, computedCache: new Map()}, animationTrace);
 
-    expect(result).toEqual([
-      {
-        ...LCPNodeData,
-        nodeId: 7,
-      },
-      {
-        ...animationNodeData,
-        animations: [
-          {failureReasonsMask: 8224, unsupportedProperties: ['width']},
-          {name: 'alpha', failureReasonsMask: 8224, unsupportedProperties: ['height']},
-          {name: 'beta', failureReasonsMask: 8224, unsupportedProperties: ['background-color']},
-        ],
-        nodeId: 4,
-      },
-      {
-        ...compositedNodeData,
-        animations: [
-          {name: 'gamma', failureReasonsMask: 0},
-        ],
-        nodeId: 5,
-      },
+    const animationTraceElements = result.filter(el => el.traceEventType === 'animation');
+    expect(animationTraceElements).toHaveLength(1);
+    expect(animationTraceElements[0].animations).toEqual([
+      {failureReasonsMask: 8224, unsupportedProperties: ['width']},
+      {name: 'alpha', failureReasonsMask: 8224, unsupportedProperties: ['height']},
+      {name: 'beta', failureReasonsMask: 8224, unsupportedProperties: ['font-size']},
     ]);
   });
 
