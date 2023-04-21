@@ -63,6 +63,7 @@ class NetworkRequests extends Audit {
 
       return {
         url: UrlUtils.elideDataURI(record.url),
+        source: record.source,
         protocol: record.protocol,
         rendererStartTime: normalizeTime(record.rendererStartTime),
         networkRequestTime: normalizeTime(record.networkRequestTime),

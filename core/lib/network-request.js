@@ -178,12 +178,8 @@ class NetworkRequest {
     this.fetchedViaServiceWorker = false;
     /** @type {string|undefined} */
     this.frameId = '';
-    /**
-     * @type {string|undefined}
-     * Only set for child targets (OOPIFs). This is the sessionId of the protocol connection on
-     * which this request was discovered. `undefined` means it came from the root.
-     */
-    this.sessionId = undefined;
+    /** @type {'page'|'iframe'|'worker'|undefined} */
+    this.source = undefined;
     this.isLinkPreload = false;
   }
 
@@ -319,11 +315,8 @@ class NetworkRequest {
     this._updateResponseHeadersEndTimeIfNecessary();
   }
 
-  /**
-   * @param {string=} sessionId
-   */
-  setSession(sessionId) {
-    this.sessionId = sessionId;
+  get oopif() {
+    return this.source === 'iframe';
   }
 
   /**

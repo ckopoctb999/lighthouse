@@ -68,13 +68,13 @@ const traceData = {
     },
     {
       requestId: '1',
-      url: 'http://gmail.com/image.jpg',
+      url: 'http://gmail.com/image-oopif.jpg',
       mimeType: 'image/jpeg',
       resourceSize: 15000,
       transferSize: 20000,
       resourceType: 'Image',
       finished: true,
-      sessionId: 'oopif', // ignore for being an oopif
+      oopif: true, // ignore for being an oopif
     },
     {
       requestId: '1',

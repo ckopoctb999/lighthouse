@@ -186,29 +186,33 @@ describe('network recorder', function() {
     const devtoolsLogs = networkRecordsToDevtoolsLog([
       {url: 'http://example.com'},
       {url: 'http://iframe.com'},
-      {url: 'http://other-iframe.com'},
     ]);
+
+    devtoolsLogs.push({
+      method: 'Target.attachedToTarget',
+      params: {
+        sessionId: 'session1',
+        targetInfo: {type: 'iframe'},
+      },
+    });
+    for (const log of devtoolsLogs) {
+      if (log.method === 'Network.requestWillBeSent' && log.params.requestId === '127122.1') {
+        log.sessionId = 'session1';
+      }
+    }
 
     const requestId1 = devtoolsLogs.find(
       log => log.params.request && log.params.request.url === 'http://iframe.com'
     ).params.requestId;
-    const requestId2 = devtoolsLogs.find(
-      log => log.params.request && log.params.request.url === 'http://other-iframe.com'
-    ).params.requestId;
 
     for (const log of devtoolsLogs) {
-      if (log.params.requestId === requestId1) log.sessionId = '1';
-
-      if (log.params.requestId === requestId2 && log.method === 'Network.loadingFinished') {
-        log.sessionId = '2';
-      }
+      if (log.params.requestId === requestId1) log.source = 'iframe';
     }
 
     const records = NetworkRecorder.recordsFromLogs(devtoolsLogs);
     expect(records).toMatchObject([
-      {url: 'http://example.com', sessionId: undefined},
-      {url: 'http://iframe.com', sessionId: '1'},
-      {url: 'http://other-iframe.com', sessionId: '2'},
+      {url: 'http://example.com', source: 'page'},
+      {url: 'http://iframe.com', source: 'iframe'},
     ]);
   });
 

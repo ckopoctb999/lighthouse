@@ -55,7 +55,7 @@ const networkRecords = [
     finished: true,
   },
   {
-    url: 'http://google.com/index.json',
+    url: 'http://google.com/index-oopif.json',
     statusCode: 200,
     mimeType: 'application/json',
     requestId: 27,
@@ -65,7 +65,7 @@ const networkRecords = [
     responseHeaders: [],
     content: '1234567',
     finished: true,
-    sessionId: 'oopif', // ignore for being from oopif
+    oopif: true, // ignore for being from oopif
   },
   {
     url: 'http://google.com/index.json',

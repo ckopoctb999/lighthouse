@@ -31,8 +31,6 @@ class NetworkRecorder extends RequestEventEmitter {
     this._records = [];
     /** @type {Map<string, NetworkRequest>} */
     this._recordsById = new Map();
-    /** @type {string|null|undefined} */
-    this._mainSessionId = null;
   }
 
   /**
@@ -75,12 +73,11 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onRequestWillBeSent(event) {
     const data = event.params;
-    const originalRequest = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const originalRequest = this._findRealRequest(data.requestId);
     // This is a simple new request, create the NetworkRequest object and finish.
     if (!originalRequest) {
       const request = new NetworkRequest();
       request.onRequestWillBeSent(data);
-      request.sessionId = event.sessionId;
       this.onRequestStarted(request);
       log.verbose('network', `request will be sent to ${request.url}`);
       return;
@@ -118,7 +115,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onRequestServedFromCache(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequest(data.requestId);
     if (!request) return;
     log.verbose('network', `${request.url} served from cache`);
     request.onRequestServedFromCache();
@@ -129,7 +126,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onResponseReceived(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequest(data.requestId);
     if (!request) return;
     log.verbose('network', `${request.url} response received`);
     request.onResponseReceived(data);
@@ -140,7 +137,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onDataReceived(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequest(data.requestId);
     if (!request) return;
     log.verbose('network', `${request.url} data received`);
     request.onDataReceived(data);
@@ -151,7 +148,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onLoadingFinished(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequest(data.requestId);
     if (!request) return;
     log.verbose('network', `${request.url} loading finished`);
     request.onLoadingFinished(data);
@@ -163,7 +160,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onLoadingFailed(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequest(data.requestId);
     if (!request) return;
     log.verbose('network', `${request.url} loading failed`);
     request.onLoadingFailed(data);
@@ -175,7 +172,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onResourceChangedPriority(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequest(data.requestId);
     if (!request) return;
     request.onResourceChangedPriority(data);
   }
@@ -204,32 +201,15 @@ class NetworkRecorder extends RequestEventEmitter {
    * message is referring.
    *
    * @param {string} requestId
-   * @param {string|undefined} sessionId
    * @return {NetworkRequest|undefined}
    */
-  _findRealRequestAndSetSession(requestId, sessionId) {
-    // The very first sessionId processed is always the main sessionId. In all but DevTools,
-    // this sessionId is undefined. However, in DevTools the main Lighthouse protocol connection
-    // does send events with sessionId set to a string, because of how DevTools routes the protocol
-    // to Lighthouse.
-    // Many places in Lighthouse use `record.sessionId === undefined` to mean that the session is not
-    // an OOPIF. To maintain this property, we intercept sessionId here and set it to undefined if
-    // it matches the first value seen.
-    if (this._mainSessionId === null) {
-      this._mainSessionId = sessionId;
-    }
-    if (this._mainSessionId === sessionId) {
-      sessionId = undefined;
-    }
-
+  _findRealRequest(requestId) {
     let request = this._recordsById.get(requestId);
     if (!request || !request.isValid) return undefined;
 
     while (request.redirectDestination) {
       request = request.redirectDestination;
     }
-
-    request.setSession(sessionId);
 
     return request;
   }
@@ -305,6 +285,33 @@ class NetworkRecorder extends RequestEventEmitter {
 
     // get out the list of records & filter out invalid records
     const records = networkRecorder.getRawRecords().filter(record => record.isValid);
+
+    // Set record.source to the Crdp target type that requested the resource,
+    // based on the what session the network events came from.
+    {
+      /** @type {Map<string, 'page'|'iframe'|'worker'>} */
+      const sessionIdToTargetType = new Map();
+      for (const message of devtoolsLog) {
+        if (message.method === 'Target.attachedToTarget') {
+          if (['page', 'iframe', 'worker'].includes(message.params.targetInfo.type)) {
+            // @ts-expect-error type narrowed.
+            sessionIdToTargetType.set(message.params.sessionId, message.params.targetInfo.type);
+          }
+        }
+      }
+
+      const requestIdToSessionId = new Map();
+      for (const message of devtoolsLog) {
+        if (message.method === 'Network.requestWillBeSent') {
+          requestIdToSessionId.set(message.params.requestId, message.sessionId);
+        }
+      }
+
+      for (const record of records) {
+        const sessionId = requestIdToSessionId.get(record.requestId);
+        record.source = sessionIdToTargetType.get(sessionId) || 'page';
+      }
+    }
 
     /** @type {Map<string, NetworkRequest[]>} */
     const recordsByURL = new Map();
