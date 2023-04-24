@@ -209,6 +209,7 @@ class TargetManager extends ProtocolEventEmitter {
 
     this._enabled = false;
     this._targetIdToTargets = new Map();
+    this._targetAttachedPayloads = [];
   }
 
   /**
