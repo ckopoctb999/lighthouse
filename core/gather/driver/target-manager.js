@@ -47,6 +47,8 @@ class TargetManager extends ProtocolEventEmitter {
      * @type {Map<string, TargetWithSession>}
      */
     this._targetIdToTargets = new Map();
+    /** @type {LH.Protocol.RawEventMessage[]} */
+    this._targetAttachedPayloads = [];
 
     this._onSessionAttached = this._onSessionAttached.bind(this);
     this._onFrameNavigated = this._onFrameNavigated.bind(this);
@@ -168,6 +170,9 @@ class TargetManager extends ProtocolEventEmitter {
       // Cast because tsc 4.7 still can't quite track the dependent parameters.
       const payload = /** @type {LH.Protocol.RawEventMessage} */ ({method, params, sessionId});
       this.emit('protocolevent', payload);
+      if (method === 'Target.attachedToTarget') {
+        this._targetAttachedPayloads.push(payload);
+      }
     };
 
     return onProtocolEvent;
@@ -181,6 +186,7 @@ class TargetManager extends ProtocolEventEmitter {
 
     this._enabled = true;
     this._targetIdToTargets = new Map();
+    this._targetAttachedPayloads = [];
 
     this._rootCdpSession.on('Page.frameNavigated', this._onFrameNavigated);
 
@@ -203,6 +209,18 @@ class TargetManager extends ProtocolEventEmitter {
 
     this._enabled = false;
     this._targetIdToTargets = new Map();
+  }
+
+  /**
+   * @param {*} event
+   * @param {*} listener
+   */
+  on(event, listener) {
+    super.on(event, listener);
+
+    if (event === 'protocolevent') {
+      this._targetAttachedPayloads.forEach(listener);
+    }
   }
 }
 
