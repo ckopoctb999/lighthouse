@@ -178,6 +178,8 @@ class NetworkRequest {
     this.fetchedViaServiceWorker = false;
     /** @type {string|undefined} */
     this.frameId = '';
+    /** @type {string|undefined} */
+    this.sessionId = undefined;
     /** @type {'page'|'iframe'|'worker'|undefined} */
     this.source = undefined;
     this.isLinkPreload = false;
@@ -313,6 +315,13 @@ class NetworkRequest {
     this.networkEndTime = data.timestamp * 1000;
 
     this._updateResponseHeadersEndTimeIfNecessary();
+  }
+
+  /**
+   * @param {string|undefined} sessionId
+   */
+  setSession(sessionId) {
+    this.sessionId = sessionId;
   }
 
   get oopif() {

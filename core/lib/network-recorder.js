@@ -73,11 +73,12 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onRequestWillBeSent(event) {
     const data = event.params;
-    const originalRequest = this._findRealRequest(data.requestId);
+    const originalRequest = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
     // This is a simple new request, create the NetworkRequest object and finish.
     if (!originalRequest) {
       const request = new NetworkRequest();
       request.onRequestWillBeSent(data);
+      request.sessionId = event.sessionId;
       this.onRequestStarted(request);
       log.verbose('network', `request will be sent to ${request.url}`);
       return;
@@ -115,7 +116,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onRequestServedFromCache(event) {
     const data = event.params;
-    const request = this._findRealRequest(data.requestId);
+    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} served from cache`);
     request.onRequestServedFromCache();
@@ -126,7 +127,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onResponseReceived(event) {
     const data = event.params;
-    const request = this._findRealRequest(data.requestId);
+    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} response received`);
     request.onResponseReceived(data);
@@ -137,7 +138,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onDataReceived(event) {
     const data = event.params;
-    const request = this._findRealRequest(data.requestId);
+    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} data received`);
     request.onDataReceived(data);
@@ -148,7 +149,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onLoadingFinished(event) {
     const data = event.params;
-    const request = this._findRealRequest(data.requestId);
+    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} loading finished`);
     request.onLoadingFinished(data);
@@ -160,7 +161,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onLoadingFailed(event) {
     const data = event.params;
-    const request = this._findRealRequest(data.requestId);
+    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} loading failed`);
     request.onLoadingFailed(data);
@@ -172,7 +173,7 @@ class NetworkRecorder extends RequestEventEmitter {
    */
   onResourceChangedPriority(event) {
     const data = event.params;
-    const request = this._findRealRequest(data.requestId);
+    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
     if (!request) return;
     request.onResourceChangedPriority(data);
   }
@@ -201,15 +202,18 @@ class NetworkRecorder extends RequestEventEmitter {
    * message is referring.
    *
    * @param {string} requestId
+   * @param {string|undefined} sessionId
    * @return {NetworkRequest|undefined}
    */
-  _findRealRequest(requestId) {
+  _findRealRequestAndSetSession(requestId, sessionId) {
     let request = this._recordsById.get(requestId);
     if (!request || !request.isValid) return undefined;
 
     while (request.redirectDestination) {
       request = request.redirectDestination;
     }
+
+    request.setSession(sessionId);
 
     return request;
   }
@@ -288,29 +292,18 @@ class NetworkRecorder extends RequestEventEmitter {
 
     // Set record.source to the Crdp target type that requested the resource,
     // based on the what session the network events came from.
-    {
-      /** @type {Map<string, 'page'|'iframe'|'worker'>} */
-      const sessionIdToTargetType = new Map();
-      for (const message of devtoolsLog) {
-        if (message.method === 'Target.attachedToTarget') {
-          if (['page', 'iframe', 'worker'].includes(message.params.targetInfo.type)) {
-            // @ts-expect-error type narrowed.
-            sessionIdToTargetType.set(message.params.sessionId, message.params.targetInfo.type);
-          }
+    /** @type {Map<string|undefined, 'page'|'iframe'|'worker'>} */
+    const sessionIdToTargetType = new Map();
+    for (const message of devtoolsLog) {
+      if (message.method === 'Target.attachedToTarget') {
+        if (['page', 'iframe', 'worker'].includes(message.params.targetInfo.type)) {
+          // @ts-expect-error type narrowed.
+          sessionIdToTargetType.set(message.params.sessionId, message.params.targetInfo.type);
         }
       }
-
-      const requestIdToSessionId = new Map();
-      for (const message of devtoolsLog) {
-        if (message.method === 'Network.requestWillBeSent') {
-          requestIdToSessionId.set(message.params.requestId, message.sessionId);
-        }
-      }
-
-      for (const record of records) {
-        const sessionId = requestIdToSessionId.get(record.requestId);
-        record.source = sessionIdToTargetType.get(sessionId) || 'page';
-      }
+    }
+    for (const record of records) {
+      record.source = sessionIdToTargetType.get(record.sessionId) || 'page';
     }
 
     /** @type {Map<string, NetworkRequest[]>} */
