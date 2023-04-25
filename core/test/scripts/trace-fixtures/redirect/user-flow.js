@@ -8,12 +8,8 @@ import {startFlow} from '../../../../index.js';
 
 /**
  * @param {import('puppeteer').Page} page
- * @param {number} port
  */
-async function runUserFlow(page, port) {
-  // eslint-disable-next-line no-unused-vars, no-self-assign
-  port = port;
-
+async function runUserFlow(page) {
   const flow = await startFlow(page);
 
   await flow.navigate('http://www.vkontakte.ru/');
