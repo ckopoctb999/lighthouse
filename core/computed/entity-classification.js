@@ -20,11 +20,13 @@ class EntityClassification {
    */
   static makeUpAnEntity(entityCache, url) {
     if (!UrlUtils.isValid(url)) return;
-    // We can make up an entity only for those URLs with a valid domain attached.
-    // So we further restrict from allowed URLs to (http/https).
-    if (!Util.createOrReturnURL(url).protocol.startsWith('http')) return;
 
-    const rootDomain = Util.getRootDomain(url);
+    const parsedUrl = Util.createOrReturnURL(url);
+    const isChromeExtension = parsedUrl.protocol.startsWith('chrome-extension');
+    // Make up an entity only for valid http/https URLs and Chrome extensions.
+    if (!isChromeExtension && !parsedUrl.protocol.startsWith('http')) return;
+
+    const rootDomain = isChromeExtension ? 'Chrome Extensions' : Util.getRootDomain(url);
     if (!rootDomain) return;
     if (entityCache.has(rootDomain)) return entityCache.get(rootDomain);
 
@@ -33,7 +35,7 @@ class EntityClassification {
       company: rootDomain,
       category: '',
       categories: [],
-      domains: [rootDomain],
+      domains: isChromeExtension ? [] : [rootDomain],
       averageExecutionTime: 0,
       totalExecutionTime: 0,
       totalOccurrences: 0,
