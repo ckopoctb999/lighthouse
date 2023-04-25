@@ -308,6 +308,8 @@ declare module Artifacts {
     /** Where the link was found, either in the DOM or in the headers of the main document */
     source: 'head'|'body'|'headers'
     node: NodeDetails | null
+    /** The fetch priority hint for preload links. */
+    fetchPriority?: string;
   }
 
   interface Script extends Omit<Crdp.Debugger.ScriptParsedEvent, 'url'|'embedderName'> {
@@ -534,6 +536,8 @@ declare module Artifacts {
     node: NodeDetails;
     /** The loading attribute of the image. */
     loading?: string;
+    /** The fetch priority hint for HTMLImageElements. */
+    fetchPriority?: string;
   }
 
   interface OptimizedImage {
@@ -599,6 +603,7 @@ declare module Artifacts {
   interface InspectorIssues {
     attributionReportingIssue: Crdp.Audits.AttributionReportingIssueDetails[];
     blockedByResponseIssue: Crdp.Audits.BlockedByResponseIssueDetails[];
+    bounceTrackingIssue: Crdp.Audits.BounceTrackingIssueDetails[];
     clientHintIssue: Crdp.Audits.ClientHintIssueDetails[];
     contentSecurityPolicyIssue: Crdp.Audits.ContentSecurityPolicyIssueDetails[];
     corsIssue: Crdp.Audits.CorsIssueDetails[];
@@ -784,6 +789,10 @@ declare module Artifacts {
     largestContentfulPaintTs: number | undefined;
     largestContentfulPaintAllFrames: number | undefined;
     largestContentfulPaintAllFramesTs: number | undefined;
+    timeToFirstByte: number | undefined;
+    timeToFirstByteTs: number | undefined;
+    lcpLoadStart: number | undefined;
+    lcpLoadEnd: number | undefined;
     interactive: number | undefined;
     interactiveTs: number | undefined;
     speedIndex: number | undefined;
@@ -974,6 +983,7 @@ export interface TraceEvent {
     };
     data?: {
       frame?: string;
+      frameID?: string;
       processId?: number;
       isLoadingMainFrame?: boolean;
       documentLoaderURL?: string;

@@ -15,7 +15,7 @@ import {
   waitForStorageUsage,
 } from '../helpers/lighthouse-helpers.js';
 
-describe('The Lighthouse start view', async () => {
+describe.skipOnParallel('The Lighthouse start view', async () => {
   it('shows a button to generate a new report', async () => {
     await navigateToLighthouseTab('empty.html');
 
@@ -54,9 +54,7 @@ describe('The Lighthouse start view', async () => {
     const disabled = await isGenerateReportButtonDisabled();
     const helpText = await getHelpText();
     assert.isTrue(disabled, 'The Generate Report button should be disabled');
-    assert.strictEqual(
-        helpText,
-        'Can only audit HTTP/HTTPS pages and Chrome extensions. Navigate to a different page to start an audit.');
+    assert.strictEqual(helpText, 'Can only audit pages on HTTP or HTTPS. Navigate to a different page.');
   });
 
   // Broken on non-debug runs
