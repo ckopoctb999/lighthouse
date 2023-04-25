@@ -115,14 +115,15 @@ describe('Entity Classification computed artifact', () => {
       {url: 'http://third-party.com'},
       {url: 'chrome://version'},
       {url: 'data:foobar'},
+      {url: 'chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js'},
     ]);
     const result = await EntityClassification.request(artifacts, context);
     const entities = Array.from(result.urlsByEntity.keys()).map(e => e.name);
     // Make sure first party is identified.
     expect(result.firstParty.name).toBe('third-party.com');
     // Make sure only valid network urls with a domain is recognized.
-    expect(entities).toEqual(['third-party.com']);
-    expect(result.entityByUrl.size).toBe(1);
+    expect(entities).toEqual(['third-party.com', 'Chrome Extensions']);
+    expect(result.entityByUrl.size).toBe(2);
     // First party check fails for non-DT-log URLs.
     expect(result.isFirstParty('chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js')).toEqual(false);
     expect(result.isFirstParty('chrome://new-tab-page')).toEqual(false);
