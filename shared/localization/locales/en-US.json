@@ -999,7 +999,7 @@
     "message": "Load Time"
   },
   "core/audits/largest-contentful-paint-element.js | itemRenderDelay": {
-    "message": "Render delay"
+    "message": "Render Delay"
   },
   "core/audits/largest-contentful-paint-element.js | itemTTFB": {
     "message": "TTFB"

@@ -1565,7 +1565,7 @@
                       "percent": "5.69%"
                     },
                     {
-                      "phase": "Render delay",
+                      "phase": "Render Delay",
                       "timing": 289.6881388780603,
                       "percent": "21.42%"
                     }
@@ -17501,7 +17501,7 @@
                       "percent": "13.00%"
                     },
                     {
-                      "phase": "Render delay",
+                      "phase": "Render Delay",
                       "timing": 966.0934276810284,
                       "percent": "53.58%"
                     }

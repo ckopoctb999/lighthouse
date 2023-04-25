@@ -28,7 +28,7 @@ const UIStrings = {
   /** Table item value for the load time phase of the Largest Contentful Paint (LCP) metric. */
   itemLoadTime: 'Load Time',
   /** Table item value for the render delay phase of the Largest Contentful Paint (LCP) metric. */
-  itemRenderDelay: 'Render delay',
+  itemRenderDelay: 'Render Delay',
 };
 
 const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
@@ -119,8 +119,10 @@ class LargestContentfulPaintElement extends Audit {
     const elementTable = Audit.makeTableDetails(headings, lcpElementDetails);
 
     const items = [elementTable];
-    const phaseTable = await this.makePhaseTable(artifacts, context);
-    if (phaseTable) items.push(phaseTable);
+    if (elementTable.items.length) {
+      const phaseTable = await this.makePhaseTable(artifacts, context);
+      if (phaseTable) items.push(phaseTable);
+    }
 
     const details = Audit.makeListDetails(items);
 
