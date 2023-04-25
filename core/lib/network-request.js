@@ -181,7 +181,7 @@ class NetworkRequest {
     /** @type {string|undefined} */
     this.sessionId = undefined;
     /** @type {'page'|'iframe'|'worker'|undefined} */
-    this.source = undefined;
+    this.sessionTargetType = undefined;
     this.isLinkPreload = false;
   }
 
@@ -325,7 +325,7 @@ class NetworkRequest {
   }
 
   get oopif() {
-    return this.source === 'iframe';
+    return this.sessionTargetType === 'iframe';
   }
 
   /**

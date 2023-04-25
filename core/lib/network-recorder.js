@@ -303,7 +303,7 @@ class NetworkRecorder extends RequestEventEmitter {
       }
     }
     for (const record of records) {
-      record.source = sessionIdToTargetType.get(record.sessionId) || 'page';
+      record.sessionTargetType = sessionIdToTargetType.get(record.sessionId) || 'page';
     }
 
     /** @type {Map<string, NetworkRequest[]>} */

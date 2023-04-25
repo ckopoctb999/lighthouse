@@ -204,14 +204,10 @@ describe('network recorder', function() {
       if (log.params.requestId === requestId1) log.sessionId = 'session1';
     }
 
-    for (const log of devtoolsLogs) {
-      if (log.params.requestId === requestId1) log.source = 'iframe';
-    }
-
     const records = NetworkRecorder.recordsFromLogs(devtoolsLogs);
     expect(records).toMatchObject([
-      {url: 'http://example.com', source: 'page', sessionId: undefined},
-      {url: 'http://iframe.com', source: 'iframe', sessionId: 'session1'},
+      {url: 'http://example.com', sessionTargetType: 'page', sessionId: undefined},
+      {url: 'http://iframe.com', sessionTargetType: 'iframe', sessionId: 'session1'},
     ]);
   });
 
