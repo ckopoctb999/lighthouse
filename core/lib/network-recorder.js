@@ -69,11 +69,12 @@ class NetworkRecorder extends RequestEventEmitter {
   // DevTools SDK network layer.
 
   /**
-   * @param {{params: LH.Crdp.Network.RequestWillBeSentEvent, sessionId?: string}} event
+   * @param {{params: LH.Crdp.Network.RequestWillBeSentEvent, targetType: LH.Protocol.TargetType, sessionId?: string}} event
    */
   onRequestWillBeSent(event) {
     const data = event.params;
-    const originalRequest = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const originalRequest = this._findRealRequestAndSetSession(
+      data.requestId, event.targetType, event.sessionId);
     // This is a simple new request, create the NetworkRequest object and finish.
     if (!originalRequest) {
       const request = new NetworkRequest();
@@ -112,44 +113,48 @@ class NetworkRecorder extends RequestEventEmitter {
   }
 
   /**
-   * @param {{params: LH.Crdp.Network.RequestServedFromCacheEvent, sessionId?: string}} event
+   * @param {{params: LH.Crdp.Network.RequestServedFromCacheEvent, targetType: LH.Protocol.TargetType, sessionId?: string}} event
    */
   onRequestServedFromCache(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequestAndSetSession(
+      data.requestId, event.targetType, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} served from cache`);
     request.onRequestServedFromCache();
   }
 
   /**
-   * @param {{params: LH.Crdp.Network.ResponseReceivedEvent, sessionId?: string}} event
+   * @param {{params: LH.Crdp.Network.ResponseReceivedEvent, targetType: LH.Protocol.TargetType, sessionId?: string}} event
    */
   onResponseReceived(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequestAndSetSession(
+      data.requestId, event.targetType, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} response received`);
     request.onResponseReceived(data);
   }
 
   /**
-   * @param {{params: LH.Crdp.Network.DataReceivedEvent, sessionId?: string}} event
+   * @param {{params: LH.Crdp.Network.DataReceivedEvent, targetType: LH.Protocol.TargetType, sessionId?: string}} event
    */
   onDataReceived(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequestAndSetSession(
+      data.requestId, event.targetType, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} data received`);
     request.onDataReceived(data);
   }
 
   /**
-   * @param {{params: LH.Crdp.Network.LoadingFinishedEvent, sessionId?: string}} event
+   * @param {{params: LH.Crdp.Network.LoadingFinishedEvent, targetType: LH.Protocol.TargetType, sessionId?: string}} event
    */
   onLoadingFinished(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequestAndSetSession(
+      data.requestId, event.targetType, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} loading finished`);
     request.onLoadingFinished(data);
@@ -157,11 +162,12 @@ class NetworkRecorder extends RequestEventEmitter {
   }
 
   /**
-   * @param {{params: LH.Crdp.Network.LoadingFailedEvent, sessionId?: string}} event
+   * @param {{params: LH.Crdp.Network.LoadingFailedEvent, targetType: LH.Protocol.TargetType, sessionId?: string}} event
    */
   onLoadingFailed(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequestAndSetSession(
+      data.requestId, event.targetType, event.sessionId);
     if (!request) return;
     log.verbose('network', `${request.url} loading failed`);
     request.onLoadingFailed(data);
@@ -169,11 +175,12 @@ class NetworkRecorder extends RequestEventEmitter {
   }
 
   /**
-   * @param {{params: LH.Crdp.Network.ResourceChangedPriorityEvent, sessionId?: string}} event
+   * @param {{params: LH.Crdp.Network.ResourceChangedPriorityEvent, targetType: LH.Protocol.TargetType, sessionId?: string}} event
    */
   onResourceChangedPriority(event) {
     const data = event.params;
-    const request = this._findRealRequestAndSetSession(data.requestId, event.sessionId);
+    const request = this._findRealRequestAndSetSession(
+      data.requestId, event.targetType, event.sessionId);
     if (!request) return;
     request.onResourceChangedPriority(data);
   }
@@ -202,10 +209,11 @@ class NetworkRecorder extends RequestEventEmitter {
    * message is referring.
    *
    * @param {string} requestId
+   * @param {LH.Protocol.TargetType} targetType
    * @param {string|undefined} sessionId
    * @return {NetworkRequest|undefined}
    */
-  _findRealRequestAndSetSession(requestId, sessionId) {
+  _findRealRequestAndSetSession(requestId, targetType, sessionId) {
     let request = this._recordsById.get(requestId);
     if (!request || !request.isValid) return undefined;
 
@@ -214,6 +222,7 @@ class NetworkRecorder extends RequestEventEmitter {
     }
 
     request.setSession(sessionId);
+    request.sessionTargetType = targetType;
 
     return request;
   }
@@ -289,22 +298,6 @@ class NetworkRecorder extends RequestEventEmitter {
 
     // get out the list of records & filter out invalid records
     const records = networkRecorder.getRawRecords().filter(record => record.isValid);
-
-    // Set record.source to the Crdp target type that requested the resource,
-    // based on the what session the network events came from.
-    /** @type {Map<string|undefined, 'page'|'iframe'|'worker'>} */
-    const sessionIdToTargetType = new Map();
-    for (const message of devtoolsLog) {
-      if (message.method === 'Target.attachedToTarget') {
-        if (['page', 'iframe', 'worker'].includes(message.params.targetInfo.type)) {
-          // @ts-expect-error type narrowed.
-          sessionIdToTargetType.set(message.params.sessionId, message.params.targetInfo.type);
-        }
-      }
-    }
-    for (const record of records) {
-      record.sessionTargetType = sessionIdToTargetType.get(record.sessionId) || 'page';
-    }
 
     /** @type {Map<string, NetworkRequest[]>} */
     const recordsByURL = new Map();

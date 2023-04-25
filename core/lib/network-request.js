@@ -180,7 +180,7 @@ class NetworkRequest {
     this.frameId = '';
     /** @type {string|undefined} */
     this.sessionId = undefined;
-    /** @type {'page'|'iframe'|'worker'|undefined} */
+    /** @type {LH.Protocol.TargetType|undefined} */
     this.sessionTargetType = undefined;
     this.isLinkPreload = false;
   }

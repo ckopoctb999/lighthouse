@@ -182,32 +182,16 @@ describe('network recorder', function() {
     });
   });
 
-  it('should set the source and sessionId of network records', () => {
+  it('should set sessionId and sessionTargetType of network records', () => {
     const devtoolsLogs = networkRecordsToDevtoolsLog([
-      {url: 'http://example.com'},
-      {url: 'http://iframe.com'},
+      {url: 'http://example.com', sessionId: undefined, sessionTargetType: 'page'},
+      {url: 'http://iframe.com', sessionId: 'session2', sessionTargetType: 'iframe'},
     ]);
-
-    devtoolsLogs.push({
-      method: 'Target.attachedToTarget',
-      params: {
-        sessionId: 'session1',
-        targetInfo: {type: 'iframe'},
-      },
-    });
-
-    const requestId1 = devtoolsLogs.find(
-      log => log.params.request && log.params.request.url === 'http://iframe.com'
-    ).params.requestId;
-
-    for (const log of devtoolsLogs) {
-      if (log.params.requestId === requestId1) log.sessionId = 'session1';
-    }
 
     const records = NetworkRecorder.recordsFromLogs(devtoolsLogs);
     expect(records).toMatchObject([
       {url: 'http://example.com', sessionTargetType: 'page', sessionId: undefined},
-      {url: 'http://iframe.com', sessionTargetType: 'iframe', sessionId: 'session1'},
+      {url: 'http://iframe.com', sessionTargetType: 'iframe', sessionId: 'session2'},
     ]);
   });
 

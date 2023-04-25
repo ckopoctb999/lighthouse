@@ -47,8 +47,6 @@ class TargetManager extends ProtocolEventEmitter {
      * @type {Map<string, TargetWithSession>}
      */
     this._targetIdToTargets = new Map();
-    /** @type {LH.Protocol.RawEventMessage[]} */
-    this._targetAttachedPayloads = [];
 
     this._onSessionAttached = this._onSessionAttached.bind(this);
     this._onFrameNavigated = this._onFrameNavigated.bind(this);
@@ -121,7 +119,7 @@ class TargetManager extends ProtocolEventEmitter {
       const targetName = target.targetInfo.url || target.targetInfo.targetId;
       log.verbose('target-manager', `target ${targetName} attached`);
 
-      const trueProtocolListener = this._getProtocolEventListener(newSession.id());
+      const trueProtocolListener = this._getProtocolEventListener(targetType, newSession.id());
       /** @type {(event: unknown) => void} */
       // @ts-expect-error - pptr currently typed only for single arg emits.
       const protocolListener = trueProtocolListener;
@@ -158,9 +156,10 @@ class TargetManager extends ProtocolEventEmitter {
   /**
    * Returns a listener for all protocol events from session, and augments the
    * event with the sessionId.
+   * @param {string} targetType
    * @param {string} sessionId
    */
-  _getProtocolEventListener(sessionId) {
+  _getProtocolEventListener(targetType, sessionId) {
     /**
      * @template {keyof LH.Protocol.RawEventMessageRecord} EventName
      * @param {EventName} method
@@ -168,11 +167,9 @@ class TargetManager extends ProtocolEventEmitter {
      */
     const onProtocolEvent = (method, params) => {
       // Cast because tsc 4.7 still can't quite track the dependent parameters.
-      const payload = /** @type {LH.Protocol.RawEventMessage} */ ({method, params, sessionId});
+      const payload = /** @type {LH.Protocol.RawEventMessage} */ (
+        {method, params, targetType, sessionId});
       this.emit('protocolevent', payload);
-      if (method === 'Target.attachedToTarget') {
-        this._targetAttachedPayloads.push(payload);
-      }
     };
 
     return onProtocolEvent;
@@ -186,7 +183,6 @@ class TargetManager extends ProtocolEventEmitter {
 
     this._enabled = true;
     this._targetIdToTargets = new Map();
-    this._targetAttachedPayloads = [];
 
     this._rootCdpSession.on('Page.frameNavigated', this._onFrameNavigated);
 
@@ -209,19 +205,6 @@ class TargetManager extends ProtocolEventEmitter {
 
     this._enabled = false;
     this._targetIdToTargets = new Map();
-    this._targetAttachedPayloads = [];
-  }
-
-  /**
-   * @param {*} event
-   * @param {*} listener
-   */
-  on(event, listener) {
-    super.on(event, listener);
-
-    if (event === 'protocolevent') {
-      this._targetAttachedPayloads.forEach(listener);
-    }
   }
 }
 
