@@ -2298,6 +2298,11 @@
                 "label": "Phase"
               },
               {
+                "key": "percent",
+                "valueType": "text",
+                "label": "% of LCP"
+              },
+              {
                 "key": "timing",
                 "valueType": "ms",
                 "label": "Timing"
@@ -2306,19 +2311,23 @@
             "items": [
               {
                 "phase": "TTFB",
-                "timing": 0
+                "timing": 571.7680000019074,
+                "percent": "4.29%"
               },
               {
                 "phase": "Load Delay",
-                "timing": 10848.868
+                "timing": 10277.099999996944,
+                "percent": "77.16%"
               },
               {
                 "phase": "Load Time",
-                "timing": 2050.649
+                "timing": 2050.6490000002086,
+                "percent": "15.40%"
               },
               {
-                "phase": "Render Delay",
-                "timing": 420.4439999999995
+                "phase": "Render delay",
+                "timing": 420.4440000009381,
+                "percent": "3.16%"
               }
             ]
           }
@@ -9076,6 +9085,27 @@
         "audits[layout-shift-elements].details.headings[0].label",
         "audits[non-composited-animations].details.headings[0].label",
         "audits[dom-size].details.headings[1].label"
+      ],
+      "core/audits/largest-contentful-paint-element.js | columnPhase": [
+        "audits[largest-contentful-paint-element].details.items[1].headings[0].label"
+      ],
+      "core/audits/largest-contentful-paint-element.js | columnPercentOfLCP": [
+        "audits[largest-contentful-paint-element].details.items[1].headings[1].label"
+      ],
+      "core/audits/largest-contentful-paint-element.js | columnTiming": [
+        "audits[largest-contentful-paint-element].details.items[1].headings[2].label"
+      ],
+      "core/audits/largest-contentful-paint-element.js | itemTTFB": [
+        "audits[largest-contentful-paint-element].details.items[1].items[0].phase"
+      ],
+      "core/audits/largest-contentful-paint-element.js | itemLoadDelay": [
+        "audits[largest-contentful-paint-element].details.items[1].items[1].phase"
+      ],
+      "core/audits/largest-contentful-paint-element.js | itemLoadTime": [
+        "audits[largest-contentful-paint-element].details.items[1].items[2].phase"
+      ],
+      "core/audits/largest-contentful-paint-element.js | itemRenderDelay": [
+        "audits[largest-contentful-paint-element].details.items[1].items[3].phase"
       ],
       "core/audits/lcp-lazy-loaded.js | title": [
         "audits[lcp-lazy-loaded].title"

@@ -7,10 +7,7 @@
 import {Audit} from './audit.js';
 import * as i18n from '../lib/i18n/i18n.js';
 import {LargestContentfulPaint} from '../computed/metrics/largest-contentful-paint.js';
-import {ProcessedNavigation} from '../computed/processed-navigation.js';
-import PrioritizeLcpImage from './prioritize-lcp-image.js';
-import {NetworkRecords} from '../computed/network-records.js';
-import {MainResource} from '../computed/main-resource.js';
+import {LCPBreakdown} from '../computed/metrics/lcp-breakdown.js';
 
 const UIStrings = {
   /** Descriptive title of a diagnostic audit that provides the element that was determined to be the Largest Contentful Paint. */
@@ -18,6 +15,20 @@ const UIStrings = {
   /** Description of a Lighthouse audit that tells the user that the element shown was determined to be the Largest Contentful Paint. */
   description: 'This is the largest contentful element painted within the viewport. ' +
     '[Learn more about the Largest Contentful Paint element](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-largest-contentful-paint/)',
+  /** Label for a column in a data table; entries will be the name of a phase in the Largest Contentful Paint (LCP) metric. */
+  columnPhase: 'Phase',
+  /** Label for a column in a data table; entries will be the percent of Largest Contentful Paint (LCP) that a phase covers. */
+  columnPercentOfLCP: '% of LCP',
+  /** Label for a column in a data table; entries will be the amount of time spent in a phase in the Largest Contentful Paint (LCP) metric. */
+  columnTiming: 'Timing',
+  /** Table item value for the Time To First Byte (TTFB) phase of the Largest Contentful Paint (LCP) metric. */
+  itemTTFB: 'TTFB',
+  /** Table item value for the load delay phase of the Largest Contentful Paint (LCP) metric. */
+  itemLoadDelay: 'Load Delay',
+  /** Table item value for the load time phase of the Largest Contentful Paint (LCP) metric. */
+  itemLoadTime: 'Load Time',
+  /** Table item value for the render delay phase of the Largest Contentful Paint (LCP) metric. */
+  itemRenderDelay: 'Render delay',
 };
 
 const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
@@ -50,62 +61,36 @@ class LargestContentfulPaintElement extends Audit {
     const metricComputationData = {trace, devtoolsLog, gatherContext,
       settings: context.settings, URL: artifacts.URL};
 
-    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const processedNavigation = await ProcessedNavigation.request(trace, context);
-    const metricResult = await LargestContentfulPaint.request(metricComputationData, context);
-    const mainResource = await MainResource.request(metricComputationData, context);
+    const {timing: metricLcp} =
+      await LargestContentfulPaint.request(metricComputationData, context);
+    const {ttfb, loadStart, loadEnd} = await LCPBreakdown.request(metricComputationData, context);
 
-    const lcpRecord = PrioritizeLcpImage.getLcpRecord(trace, processedNavigation, networkRecords);
-    if (!lcpRecord) return;
+    let loadDelay = 0;
+    let loadTime = 0;
+    let renderDelay = metricLcp - ttfb;
 
-    const timeOriginTs = processedNavigation.timestamps.timeOrigin;
-    const firstByteTs = mainResource.responseHeadersEndTime * 1000;
-
-    /** @type {number|undefined} */
-    let lcpLoadStartTs = undefined;
-    /** @type {number|undefined} */
-    let lcpLoadEndTs = undefined;
-
-    if ('pessimisticEstimate' in metricResult) {
-      for (const [node, timing] of metricResult.pessimisticEstimate.nodeTimings) {
-        if (node.type === 'network' &&
-            node.record.requestId === lcpRecord.requestId) {
-          lcpLoadStartTs = timing.startTime * 1000 + timeOriginTs;
-          lcpLoadEndTs = timing.endTime * 1000 + timeOriginTs;
-        }
-      }
-    } else {
-      lcpLoadStartTs = lcpRecord.networkRequestTime * 1000;
-      lcpLoadEndTs = lcpRecord.networkEndTime * 1000;
+    if (loadStart && loadEnd) {
+      loadDelay = loadStart - ttfb;
+      loadTime = loadEnd - loadStart;
+      renderDelay = metricLcp - loadEnd;
     }
 
-    if (!lcpLoadStartTs || !lcpLoadEndTs) return;
-
-    // Technically TTFB is calculated from when the main document request was initiated, not the last navigation start event.
-    // However, our LCP is calculated from the last navigation start event and we want these phases to always add up to LCP.
-    // In theory, the difference between the initial request time and navigation start event should be small.
-    const ttfb = (firstByteTs - timeOriginTs) / 1000;
-
-    const loadDelay = (lcpLoadStartTs - firstByteTs) / 1000;
-    const loadTime = (lcpLoadEndTs - lcpLoadStartTs) / 1000;
-    const renderDelay = metricResult.timing - loadTime - loadDelay - ttfb;
-
     const results = [
-      {phase: 'TTFB', timing: ttfb},
-      {phase: 'Load Delay', timing: loadDelay},
-      {phase: 'Load Time', timing: loadTime},
-      {phase: 'Render Delay', timing: renderDelay},
+      {phase: str_(UIStrings.itemTTFB), timing: ttfb},
+      {phase: str_(UIStrings.itemLoadDelay), timing: loadDelay},
+      {phase: str_(UIStrings.itemLoadTime), timing: loadTime},
+      {phase: str_(UIStrings.itemRenderDelay), timing: renderDelay},
     ].map(result => {
-      const percent = 100 * result.timing / metricResult.timing;
+      const percent = 100 * result.timing / metricLcp;
       const percentStr = `${percent.toFixed(2)}%`;
       return {...result, percent: percentStr};
     });
 
     /** @type {LH.Audit.Details.Table['headings']} */
     const headings = [
-      {key: 'phase', valueType: 'text', label: 'Phase'},
-      {key: 'percent', valueType: 'text', label: '% of LCP'},
-      {key: 'timing', valueType: 'ms', label: 'Timing'},
+      {key: 'phase', valueType: 'text', label: str_(UIStrings.columnPhase)},
+      {key: 'percent', valueType: 'text', label: str_(UIStrings.columnPercentOfLCP)},
+      {key: 'timing', valueType: 'ms', label: str_(UIStrings.columnTiming)},
     ];
 
     return Audit.makeTableDetails(headings, results);
