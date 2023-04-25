@@ -145,7 +145,8 @@ describe('Fraggle Rock API', function() {
       expect(erroredAudits).toHaveLength(0);
     });
 
-    it('should compute results from timespan after page load', async () => {
+    // eslint-disable-next-line max-len
+    it('should know target type of network requests from frames created before timespan', async () => {
       state.server.baseDir = `${LH_ROOT}/cli/test/fixtures`;
       const {page, serverBaseUrl} = state;
 
