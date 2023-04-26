@@ -8,7 +8,6 @@ import LargestContentfulPaintElementAudit from '../../audits/largest-contentful-
 import {defaultSettings} from '../../config/constants.js';
 import {createTestTrace} from '../create-test-trace.js';
 import {networkRecordsToDevtoolsLog} from '../network-records-to-devtools-log.js';
-import {getURLArtifactFromDevtoolsLog} from '../test-utils.js';
 
 const requestedUrl = 'http://example.com:3000';
 const mainDocumentUrl = 'http://www.example.com:3000';
