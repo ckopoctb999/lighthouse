@@ -79,18 +79,18 @@ describe('Performance: page execution timings audit', () => {
     const output = await PageExecutionTimings.audit(artifacts, {options, computedCache: new Map()});
     expect(keyOutput(output)).toMatchInlineSnapshot(`
 Object {
-  "garbageCollection": 15,
-  "other": 244,
-  "paintCompositeRender": 12,
-  "parseHTML": 60,
-  "scriptEvaluation": 552,
-  "scriptParseCompile": 74,
-  "styleLayout": 65,
+  "garbageCollection": 14,
+  "other": 188,
+  "paintCompositeRender": 11,
+  "parseHTML": 52,
+  "scriptEvaluation": 577,
+  "scriptParseCompile": 67,
+  "styleLayout": 70,
 }
 `);
-    expect(Math.round(output.numericValue)).toMatchInlineSnapshot(`1021`);
+    expect(Math.round(output.numericValue)).toMatchInlineSnapshot(`979`);
     assert.equal(output.details.items.length, 7);
-    assert.equal(output.score, 0.99);
+    assert.equal(output.score, 1);
   });
 
   it('should compute the correct values for the load trace (legacy)', async () => {
@@ -111,15 +111,15 @@ Object {
     const output = await PageExecutionTimings.audit(artifacts, {options, computedCache: new Map()});
     expect(keyOutput(output)).toMatchInlineSnapshot(`
 Object {
-  "other": 46,
-  "paintCompositeRender": 44,
+  "other": 45,
+  "paintCompositeRender": 28,
   "parseHTML": 1,
   "scriptEvaluation": 7,
   "scriptParseCompile": 1,
-  "styleLayout": 86,
+  "styleLayout": 35,
 }
 `);
-    expect(Math.round(output.numericValue)).toMatchInlineSnapshot(`184`);
+    expect(Math.round(output.numericValue)).toMatchInlineSnapshot(`118`);
     assert.equal(output.details.items.length, 6);
     assert.equal(output.score, 1);
   });

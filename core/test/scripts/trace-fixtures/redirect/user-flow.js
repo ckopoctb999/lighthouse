@@ -10,7 +10,11 @@ import {startFlow} from '../../../../index.js';
  * @param {import('puppeteer').Page} page
  */
 async function runUserFlow(page) {
-  const flow = await startFlow(page);
+  const flow = await startFlow(page, {
+    flags: {
+      throttlingMethod: 'provided',
+    },
+  });
 
   await flow.navigate('http://www.vkontakte.ru/');
 
