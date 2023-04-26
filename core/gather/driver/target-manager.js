@@ -156,7 +156,7 @@ class TargetManager extends ProtocolEventEmitter {
   /**
    * Returns a listener for all protocol events from session, and augments the
    * event with the sessionId.
-   * @param {string} targetType
+   * @param {LH.Protocol.TargetType} targetType
    * @param {string} sessionId
    */
   _getProtocolEventListener(targetType, sessionId) {
