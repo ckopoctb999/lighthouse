@@ -22,7 +22,7 @@ class EntityClassification {
     if (!UrlUtils.isValid(url)) return;
 
     const parsedUrl = Util.createOrReturnURL(url);
-    const isChromeExtension = parsedUrl.protocol.startsWith('chrome-extension');
+    const isChromeExtension = parsedUrl.protocol === 'chrome-extension:';
     // Make up an entity only for valid http/https URLs and Chrome extensions.
     if (!isChromeExtension && !parsedUrl.protocol.startsWith('http')) return;
 
