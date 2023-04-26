@@ -410,7 +410,6 @@ class Audit {
       warnings: product.warnings,
 
       details: product.details,
-      metricSavings: product.metricSavings,
     };
   }
 }

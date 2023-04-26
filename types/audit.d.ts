@@ -18,7 +18,6 @@ declare module Audit {
   export type Result = AuditResult.Result;
   export type ScoreDisplayMode = AuditResult.ScoreDisplayMode;
   export type ScoreDisplayModes = AuditResult.ScoreDisplayModes;
-  export type MetricSavings = AuditResult.MetricSavings;
 
   type Context = Util.Immutable<{
     /** audit options */
@@ -82,8 +81,6 @@ declare module Audit {
     details?: AuditDetails;
     /** If an audit encounters unusual execution circumstances, strings can be put in this optional array to add top-level warnings to the LHR. */
     runWarnings?: Array<IcuMessage>;
-    /** Estimates of how much this audit affects various performance metrics. Values will be in the unit of the respective metrics. */
-    metricSavings?: MetricSavings;
   }
 
   /** The Audit.Product type for audits that do not return a `numericValue`. */
