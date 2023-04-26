@@ -146,7 +146,7 @@ describe('Fraggle Rock API', function() {
     });
 
     // eslint-disable-next-line max-len
-    it.only('should know target type of network requests from frames created before timespan', async () => {
+    it('should know target type of network requests from frames created before timespan', async () => {
       state.server.baseDir = `${LH_ROOT}/cli/test/fixtures`;
       const {page, serverBaseUrl} = state;
 
