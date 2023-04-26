@@ -146,13 +146,19 @@ describe('Fraggle Rock API', function() {
     });
 
     // eslint-disable-next-line max-len
-    it('should know target type of network requests from frames created before timespan', async () => {
+    it.only('should know target type of network requests from frames created before timespan', async () => {
       state.server.baseDir = `${LH_ROOT}/cli/test/fixtures`;
       const {page, serverBaseUrl} = state;
 
-      page.goto(`${serverBaseUrl}/oopif-scripts-timespan.html`);
+      await page.goto(`${serverBaseUrl}/oopif-scripts-timespan.html`);
+
       const run = await api.startTimespan(state.page);
-      await page.waitForTimeout(8000);
+      for (const iframe of page.frames()) {
+        if (iframe.url().includes('/oopif-simple-page.html')) {
+          iframe.click('button');
+        }
+      }
+      await page.waitForNetworkIdle();
       const result = await run.endTimespan();
 
       if (!result) throw new Error('Lighthouse failed to produce a result');
