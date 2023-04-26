@@ -522,7 +522,8 @@ describe('DetailsRenderer', () => {
             entities: [
               {name: 'example.com', category: 'Cat', isFirstParty: true},
               {name: 'cdn.com', category: 'CDN'},
-              {name: 'Chrome Extensions', origins: ['chrome-extension://abcdefghijklmnopqrstuvwxyz']},
+              {name: 'Sample Chrome Extension', category: 'Chrome Extension',
+                origins: ['chrome-extension://abcdefghijklmnopqrstuvwxyz']},
             ],
           });
 
@@ -584,7 +585,7 @@ describe('DetailsRenderer', () => {
               {url: 'https://example.com/1', totalBytes: 100, wastedBytes: 500, entity: 'example.com'},
               {url: 'https://cdn.com/1', totalBytes: 300, wastedBytes: 700, entity: 'cdn.com'},
               {url: 'https://cdn.com/2', totalBytes: 400, wastedBytes: 800, entity: 'cdn.com'},
-              {url: 'chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js', totalBytes: 300, wastedBytes: 700, entity: 'Chrome Extension'},
+              {url: 'chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js', totalBytes: 300, wastedBytes: 700, entity: 'Sample Chrome Extension'},
               {url: 'chrome://new-tab-page', totalBytes: 300, wastedBytes: 700},
               {url: 'Unattributable', totalBytes: 500, wastedBytes: 500}, // entity not marked.
             ],
@@ -602,8 +603,8 @@ describe('DetailsRenderer', () => {
           );
           assert.deepStrictEqual(
             [...el.querySelectorAll('.lh-row--group')[2].children].map(td => td.textContent),
-            ['Chrome Extension', '0.3 KiB', '0.7 KiB'],
-            'did not render all Chrome Extensions row'
+            ['Sample Chrome Extension Chrome Extension', '0.3 KiB', '0.7 KiB'],
+            'did not render Chrome Extensions row'
           );
           assert.deepStrictEqual(
             [...el.querySelectorAll('.lh-row--group')[3].children].map(td => td.textContent),

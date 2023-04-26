@@ -26,7 +26,8 @@ class EntityClassification {
     // Make up an entity only for valid http/https URLs and Chrome extensions.
     if (!isChromeExtension && !parsedUrl.protocol.startsWith('http')) return;
 
-    const rootDomain = isChromeExtension ? 'Chrome Extensions' : Util.getRootDomain(url);
+    const rootDomain = isChromeExtension ?
+      Util.getChromeExtensionOrigin(url) : Util.getRootDomain(url);
     if (!rootDomain) return;
     if (entityCache.has(rootDomain)) return entityCache.get(rootDomain);
 
@@ -46,6 +47,35 @@ class EntityClassification {
   }
 
   /**
+   * Preload Chrome extensions found in the devtoolsLog into cache.
+   * @param {EntityCache} entityCache
+   * @param {LH.DevtoolsLog} devtoolsLog
+   */
+  static preloadChromeExtensionsToCache_(entityCache, devtoolsLog) {
+    for (const entry of devtoolsLog.values()) {
+      if (entry.method !== 'Runtime.executionContextCreated') continue;
+
+      const origin = entry.params.context.origin;
+      if (!origin.startsWith('chrome-extension:')) continue;
+      if (entityCache.has(origin)) continue;
+
+      const name = entry.params.context.name;
+      const host = new URL(origin).host;
+      entityCache.set(origin, {
+        name,
+        company: name,
+        category: 'Chrome Extension',
+        homepage: 'https://chromewebstore.google.com/detail/' + host,
+        categories: [],
+        domains: [],
+        averageExecutionTime: 0,
+        totalExecutionTime: 0,
+        totalOccurrences: 0,
+      });
+    }
+  }
+
+  /**
    * @param {{URL: LH.Artifacts['URL'], devtoolsLog: LH.DevtoolsLog}} data
    * @param {LH.Artifacts.ComputedContext} context
    * @return {Promise<LH.Artifacts.EntityClassification>}
@@ -58,6 +88,8 @@ class EntityClassification {
     const entityByUrl = new Map();
     /** @type {Map<LH.Artifacts.Entity, Set<string>>} */
     const urlsByEntity = new Map();
+
+    EntityClassification.preloadChromeExtensionsToCache_(madeUpEntityCache, data.devtoolsLog);
 
     for (const record of networkRecords) {
       const {url} = record;

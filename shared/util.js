@@ -267,7 +267,7 @@ class Util {
    */
   static getChromeExtensionOrigin(url) {
     const parsedUrl = new URL(url);
-    return parsedUrl.protocol + '://' + parsedUrl.host;
+    return parsedUrl.protocol + '//' + parsedUrl.host;
   }
 
   /**

@@ -115,17 +115,55 @@ describe('Entity Classification computed artifact', () => {
       {url: 'http://third-party.com'},
       {url: 'chrome://version'},
       {url: 'data:foobar'},
-      {url: 'chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js'},
     ]);
     const result = await EntityClassification.request(artifacts, context);
     const entities = Array.from(result.urlsByEntity.keys()).map(e => e.name);
     // Make sure first party is identified.
     expect(result.firstParty.name).toBe('third-party.com');
     // Make sure only valid network urls with a domain is recognized.
-    expect(entities).toEqual(['third-party.com', 'Chrome Extensions']);
+    expect(entities).toEqual(['third-party.com']);
+    expect(result.entityByUrl.size).toBe(1);
+    // First party check returns false for non-DT-log URLs.
+    expect(result.isFirstParty('chrome://version')).toEqual(false);
+  });
+
+  it('classifies chrome-extension URLs and resolves their names', async () => {
+    artifacts.URL = {
+      mainDocumentUrl: 'http://third-party.com',
+    };
+    artifacts.devtoolsLog = networkRecordsToDevtoolsLog([
+      {url: 'http://third-party.com'},
+      {url: 'data:foobar'},
+      {'url': 'chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js'},
+    ]);
+
+    // Inject an executionContextCreated entry to resolve extension names
+    artifacts.devtoolsLog.push({
+      method: 'Runtime.executionContextCreated',
+      params: {
+        context: {
+          origin: 'chrome-extension://abcdefghijklmnopqrstuvwxyz',
+          name: 'Sample Chrome Extension',
+        },
+      },
+    });
+
+    const result = await EntityClassification.request(artifacts, context);
+    const entities = Array.from(result.urlsByEntity.keys()).map(e => e.name);
+    // Make sure first party is identified.
+    expect(result.firstParty.name).toBe('third-party.com');
+    // Make sure only valid network urls with a domain is recognized.
+    expect(entities).toEqual(['third-party.com', 'Sample Chrome Extension']);
+    const extensionEntity = result.entityByUrl
+      .get('chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js');
+    expect(extensionEntity).toHaveProperty('category', 'Chrome Extension');
+    expect(extensionEntity).toHaveProperty('name', 'Sample Chrome Extension');
+    expect(extensionEntity).toHaveProperty('homepage',
+      'https://chromewebstore.google.com/detail/abcdefghijklmnopqrstuvwxyz');
     expect(result.entityByUrl.size).toBe(2);
     // First party check fails for non-DT-log URLs.
-    expect(result.isFirstParty('chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js')).toEqual(false);
+    expect(result.isFirstParty('chrome-extension://abcdefghijklmnopqrstuvwxyz/foo/bar.js'))
+      .toEqual(false);
     expect(result.isFirstParty('chrome://new-tab-page')).toEqual(false);
   });
 });
