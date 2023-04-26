@@ -111,15 +111,15 @@ Object {
     const output = await PageExecutionTimings.audit(artifacts, {options, computedCache: new Map()});
     expect(keyOutput(output)).toMatchInlineSnapshot(`
 Object {
-  "other": 45,
-  "paintCompositeRender": 28,
+  "other": 46,
+  "paintCompositeRender": 44,
   "parseHTML": 1,
   "scriptEvaluation": 7,
   "scriptParseCompile": 1,
-  "styleLayout": 35,
+  "styleLayout": 86,
 }
 `);
-    expect(Math.round(output.numericValue)).toMatchInlineSnapshot(`118`);
+    expect(Math.round(output.numericValue)).toMatchInlineSnapshot(`184`);
     assert.equal(output.details.items.length, 6);
     assert.equal(output.score, 1);
   });
