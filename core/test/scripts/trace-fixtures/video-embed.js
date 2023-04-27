@@ -4,7 +4,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import {startFlow} from '../../../../index.js';
+import {startFlow} from '../../../index.js';
 
 /**
  * @param {import('puppeteer').Page} page
@@ -13,7 +13,7 @@ import {startFlow} from '../../../../index.js';
 async function runUserFlow(page, port) {
   const flow = await startFlow(page);
 
-  await flow.navigate(`http://localhost:${port}/perf/animations.html`);
+  await flow.navigate(`http://localhost:${port}/video-embed.html`);
 
   return flow;
 }
@@ -24,18 +24,22 @@ async function runUserFlow(page, port) {
 function verify(artifacts) {
   const {traceEvents} = artifacts.Trace;
 
-  const failingAnimationEvents =
-    traceEvents.filter(e => e.name === 'Animation' && e.args.data?.compositeFailed);
-  if (failingAnimationEvents.length !== 3) {
-    throw new Error('expected 3 Animation events to fail compositing');
+  if (!traceEvents.find(e =>
+    e.name === 'navigationStart' && e.args.data?.documentLoaderURL?.includes('youtube.com'))) {
+    throw new Error('missing video embed');
+  }
+  if (!traceEvents.find(e =>
+    e.name === 'navigationStart' && e.args.data?.documentLoaderURL?.includes('vimeo.com'))) {
+    throw new Error('missing video embed');
   }
 }
 
 export default {
-  name: 'animation',
-  about: 'Page with an animated elements that are composited and non-composited',
-  saveTrace: 'animation.json',
-  saveDevtoolsLog: false,
+  name: 'video-embed',
+  about: 'Page with a YouTube and Vimeo video',
+  // TODO: drop m84 suffix
+  saveTrace: 'video-embeds-m84.json',
+  saveDevtoolsLog: 'video-embeds-m84.devtools.log.json',
   runUserFlow,
   verify,
 };

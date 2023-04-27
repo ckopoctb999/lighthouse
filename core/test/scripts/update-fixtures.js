@@ -8,13 +8,13 @@
 
 import * as puppeteer from 'puppeteer';
 
-import {LH_ROOT} from '../../../../root.js';
-import {Server} from '../../../../cli/test/fixtures/static-server.js';
-import {saveTrace, saveDevtoolsLog} from '../../../../core/lib/asset-saver.js';
-import collectMetaAnimation from './animation/user-flow.js';
-import collectMetaUserRedirect from './redirect/user-flow.js';
-import collectMetaUserTimings from './user-timings/user-flow.js';
-import collectMetaUserVideoEmbed from './video-embed/user-flow.js';
+import {LH_ROOT} from '../../../root.js';
+import {Server} from '../../../cli/test/fixtures/static-server.js';
+import {saveTrace, saveDevtoolsLog} from '../../lib/asset-saver.js';
+import collectMetaAnimation from './trace-fixtures/animation.js';
+import collectMetaUserRedirect from './trace-fixtures/redirect.js';
+import collectMetaUserTimings from './trace-fixtures/user-timings.js';
+import collectMetaUserVideoEmbed from './trace-fixtures/video-embed.js';
 
 const fixturesDir = `${LH_ROOT}/core/test/fixtures/traces`;
 

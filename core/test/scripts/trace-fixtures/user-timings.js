@@ -4,7 +4,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import {startFlow} from '../../../../index.js';
+import {startFlow} from '../../../index.js';
 
 /**
  * @param {import('puppeteer').Page} page
@@ -13,7 +13,11 @@ import {startFlow} from '../../../../index.js';
 async function runUserFlow(page, port) {
   const flow = await startFlow(page);
 
-  await flow.navigate(`http://localhost:${port}/video-embed.html`);
+  await flow.startTimespan();
+  await page.goto(`http://localhost:${port}/user-timings.html`, {waitUntil: 'networkidle0'});
+  await page.click('#button');
+  await page.waitForFunction('results.textContent');
+  await flow.endTimespan();
 
   return flow;
 }
@@ -24,22 +28,23 @@ async function runUserFlow(page, port) {
 function verify(artifacts) {
   const {traceEvents} = artifacts.Trace;
 
-  if (!traceEvents.find(e =>
-    e.name === 'navigationStart' && e.args.data?.documentLoaderURL?.includes('youtube.com'))) {
-    throw new Error('missing video embed');
-  }
-  if (!traceEvents.find(e =>
-    e.name === 'navigationStart' && e.args.data?.documentLoaderURL?.includes('vimeo.com'))) {
-    throw new Error('missing video embed');
-  }
+  [
+    'start',
+    'fetch-end',
+    'fetch-end',
+    'Zone:ZonePromise',
+  ].forEach(eventName => {
+    if (!traceEvents.find(e => e.cat === 'blink.user_timing' && e.name === eventName)) {
+      throw new Error(`missing user timing: ${eventName}`);
+    }
+  });
 }
 
 export default {
-  name: 'video-embed',
-  about: 'Page with a YouTube and Vimeo video',
-  // TODO: drop m84 suffix
-  saveTrace: 'video-embeds-m84.json',
-  saveDevtoolsLog: 'video-embeds-m84.devtools.log.json',
+  name: 'user-timings',
+  about: 'Page with calls to the performance user timings API',
+  saveTrace: 'trace-user-timings.json',
+  saveDevtoolsLog: false,
   runUserFlow,
   verify,
 };
