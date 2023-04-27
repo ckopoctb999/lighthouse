@@ -17,8 +17,8 @@ Object {
   "roughEstimateOfLCP": 2758,
   "roughEstimateOfLCPLoadEnd": undefined,
   "roughEstimateOfLCPLoadStart": undefined,
-  "roughEstimateOfSI": 3681,
+  "roughEstimateOfSI": 3169,
   "roughEstimateOfTTFB": 609,
-  "roughEstimateOfTTI": 4519,
+  "roughEstimateOfTTI": 4592,
 }
 `;
