@@ -119,7 +119,6 @@ describe('Non-composited animations audit', () => {
       .toBeUndefined();
   });
 
-  // Note: might be safe to delete, seems `failureReasonsMask: 0` no longer appears in traces.
   it('does not surface composited animation', async () => {
     const artifacts = {
       TraceElements: [
