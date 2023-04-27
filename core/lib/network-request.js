@@ -324,7 +324,7 @@ class NetworkRequest {
     this.sessionId = sessionId;
   }
 
-  get oopif() {
+  get isOutOfProcessIframe() {
     return this.sessionTargetType === 'iframe';
   }
 
