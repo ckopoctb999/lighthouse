@@ -54,7 +54,7 @@ function collectAnchorElements() {
     if (currentLang === null) {
       const parentWithLang = node.closest('[lang]');
 
-      // TODO: fallbacks to pragma-set-default-language or HTTP header
+      // TODO: fallback to pragma-set-default-language or HTTP header
       currentLang = !parentWithLang ? '' : parentWithLang.getAttribute('lang');
     }
 
@@ -78,7 +78,6 @@ function collectAnchorElements() {
         if (!childrenWithLang.length) {
           return elLang || currentLang || '';
         } else {
-          // recursive call
           return getLangOfInnerText(el, elLang || currentLang || '');
         }
       } else {
