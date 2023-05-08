@@ -12,8 +12,8 @@ import {readJson} from '../../test-utils.js';
 
 const acceptableTrace = readJson('../../fixtures/traces/progressive-app-m60.json', import.meta);
 const acceptableDevToolsLog = readJson('../../fixtures/traces/progressive-app-m60.devtools.log.json', import.meta);
-const redirectTrace = readJson('../../fixtures/traces/site-with-redirect.json', import.meta);
-const redirectDevToolsLog = readJson('../../fixtures/traces/site-with-redirect.devtools.log.json', import.meta);
+const redirectTrace = readJson('../../fixtures/artifacts/redirect/trace.json', import.meta);
+const redirectDevToolsLog = readJson('../../fixtures/artifacts/redirect/devtoolslog.json', import.meta);
 
 const options = Interactive.defaultOptions;
 
@@ -65,9 +65,8 @@ describe('Performance: interactive audit', () => {
 
     const context = getFakeContext({formFactor: 'mobile', throttlingMethod: 'provided'});
     return Interactive.audit(artifacts, context).then(output => {
-      assert.equal(output.score, 0.97);
-      assert.equal(Math.round(output.numericValue), 2712);
-      expect(output.displayValue).toBeDisplayString('2.7\xa0s');
+      assert.equal(output.score, 0.98);
+      expect(output.numericValue).toMatchInlineSnapshot(`2381.989`);
     });
   });
 });

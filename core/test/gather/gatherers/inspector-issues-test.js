@@ -127,7 +127,7 @@ function mockCSP(details) {
 }
 
 /**
- * @param {LH.Crdp.Audits.DeprecationIssueType} type
+ * @param {string} type
  * @return {LH.Crdp.Audits.InspectorIssue}
  */
 function mockDeprecation(type) {
@@ -212,6 +212,7 @@ describe('_getArtifact', () => {
         cookieExclusionReasons: [],
         operation: 'ReadCookie',
       }],
+      bounceTrackingIssue: [],
       blockedByResponseIssue: [{
         request: {requestId: '3'},
         reason: 'CorpNotSameOrigin',
@@ -244,7 +245,6 @@ describe('_getArtifact', () => {
       navigatorUserAgentIssue: [],
       quirksModeIssue: [],
       sharedArrayBufferIssue: [],
-      twaQualityEnforcement: [],
       federatedAuthRequestIssue: [],
     });
   });
@@ -286,6 +286,7 @@ describe('_getArtifact', () => {
         cookieExclusionReasons: [],
         operation: 'ReadCookie',
       }],
+      bounceTrackingIssue: [],
       blockedByResponseIssue: [{
         request: {requestId: '5'},
         reason: 'CorpNotSameOrigin',
@@ -301,7 +302,6 @@ describe('_getArtifact', () => {
       navigatorUserAgentIssue: [],
       quirksModeIssue: [],
       sharedArrayBufferIssue: [],
-      twaQualityEnforcement: [],
       federatedAuthRequestIssue: [],
     });
   });
@@ -353,6 +353,7 @@ describe('FR compat (inspector-issues)', () => {
         mainResourceURL: 'https://example.com',
       }],
       cookieIssue: [],
+      bounceTrackingIssue: [],
       blockedByResponseIssue: [],
       heavyAdIssue: [],
       clientHintIssue: [],
@@ -365,7 +366,6 @@ describe('FR compat (inspector-issues)', () => {
       navigatorUserAgentIssue: [],
       quirksModeIssue: [],
       sharedArrayBufferIssue: [],
-      twaQualityEnforcement: [],
       federatedAuthRequestIssue: [],
     });
   });
@@ -389,6 +389,7 @@ describe('FR compat (inspector-issues)', () => {
         mainResourceURL: 'https://example.com',
       }],
       cookieIssue: [],
+      bounceTrackingIssue: [],
       blockedByResponseIssue: [],
       clientHintIssue: [],
       heavyAdIssue: [],
@@ -401,7 +402,6 @@ describe('FR compat (inspector-issues)', () => {
       navigatorUserAgentIssue: [],
       quirksModeIssue: [],
       sharedArrayBufferIssue: [],
-      twaQualityEnforcement: [],
       federatedAuthRequestIssue: [],
     });
   });

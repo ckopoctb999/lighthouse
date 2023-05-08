@@ -11,7 +11,7 @@ import {createTestTrace, rootFrame} from '../../create-test-trace.js';
 import {createMockSendCommandFn, createMockOnFn} from '../mock-commands.js';
 import {flushAllTimersAndMicrotasks, fnAny, readJson, timers} from '../../test-utils.js';
 
-const animationTrace = readJson('../../fixtures/traces/animation.json', import.meta);
+const animationTrace = readJson('../../fixtures/artifacts/animation/trace.json', import.meta);
 
 function makeLayoutShiftTraceEvent(score, impactedNodes, had_recent_input = false) { // eslint-disable-line camelcase
   return {
@@ -581,27 +581,15 @@ describe('Trace Elements gatherer - Animated Elements', () => {
 
     const result = await gatherer._getArtifact({driver, computedCache: new Map()}, animationTrace);
 
-    expect(result).toEqual([
-      {
-        ...LCPNodeData,
-        nodeId: 7,
-      },
-      {
-        ...animationNodeData,
-        animations: [
-          {failureReasonsMask: 8224, unsupportedProperties: ['width']},
-          {name: 'alpha', failureReasonsMask: 8224, unsupportedProperties: ['height']},
-          {name: 'beta', failureReasonsMask: 8224, unsupportedProperties: ['background-color']},
-        ],
-        nodeId: 4,
-      },
-      {
-        ...compositedNodeData,
-        animations: [
-          {name: 'gamma', failureReasonsMask: 0},
-        ],
-        nodeId: 5,
-      },
+    const animationTraceElements = result.filter(el => el.traceEventType === 'animation');
+    expect(animationTraceElements).toHaveLength(2);
+    expect(animationTraceElements[0].animations).toEqual([
+      {failureReasonsMask: 8224, unsupportedProperties: ['width']},
+      {name: 'alpha', failureReasonsMask: 8224, unsupportedProperties: ['height']},
+      {name: 'beta', failureReasonsMask: 8224, unsupportedProperties: ['font-size']},
+    ]);
+    expect(animationTraceElements[1].animations).toEqual([
+      {name: 'gamma', failureReasonsMask: 0, unsupportedProperties: undefined},
     ]);
   });
 

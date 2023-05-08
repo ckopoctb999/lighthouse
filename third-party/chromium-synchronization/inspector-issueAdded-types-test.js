@@ -34,6 +34,7 @@ describe('issueAdded types', () => {
 Array [
   "attributionReportingIssueDetails",
   "blockedByResponseIssueDetails",
+  "bounceTrackingIssueDetails",
   "clientHintIssueDetails",
   "contentSecurityPolicyIssueDetails",
   "cookieIssueDetails",
@@ -47,7 +48,6 @@ Array [
   "navigatorUserAgentIssueDetails",
   "quirksModeIssueDetails",
   "sharedArrayBufferIssueDetails",
-  "twaQualityEnforcementDetails",
 ]
 `);
   });
