@@ -96,6 +96,7 @@ const nonDescriptiveLinkTexts = {
     'siehe',
     'dies',
     'das',
+    'weiterlesen',
   ]),
 };
 
