@@ -170,6 +170,7 @@ class LinkText extends Audit {
         return {
           href: link.href,
           text: link.text.trim(),
+          textLang: link.textLang,
         };
       });
 
