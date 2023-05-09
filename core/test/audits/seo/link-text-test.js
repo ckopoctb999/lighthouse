@@ -39,7 +39,6 @@ describe('SEO: link text audit', () => {
   });
 
   it('ignores non descriptive link texts with unknown language', () => {
-
     const artifacts = {
       URL: {
         finalDisplayedUrl: 'https://example.com/page.html',
