@@ -10,7 +10,7 @@ import LinkTextAudit from '../../../audits/seo/link-text.js';
 
 describe('SEO: link text audit', () => {
   it('fails when link with non descriptive text is found', () => {
-    const invalidLink = {href: 'https://example.com/otherpage.html', text: 'click here', rel: '', lang: 'en'};
+    const invalidLink = {href: 'https://example.com/otherpage.html', text: 'click here', rel: '', textLang: 'en'};
     const artifacts = {
       URL: {
         finalDisplayedUrl: 'https://example.com/page.html',
