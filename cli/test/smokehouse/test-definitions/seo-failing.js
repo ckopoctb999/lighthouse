@@ -71,11 +71,15 @@ const expectations = {
       },
       'link-text': {
         score: 0,
-        displayValue: '4 links found',
+        displayValue: '5 links found',
         details: {
-          items: {
-            length: 4,
-          },
+          items: [
+            {text: 'click this', 'textLang': 'en'},
+            {text: 'click this', 'textLang': 'en'},
+            {text: 'CLICK THIS', 'textLang': 'en'},
+            {text: 'klicke hier', 'textLang': 'de'},
+            {text: 'click this', 'textLang': 'en'},
+          ],
         },
       },
       'is-crawlable': {
