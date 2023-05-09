@@ -35,10 +35,10 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: '', textLang: 'en'},
-        {href: 'https://example.com/page.html', text: 'click here', rel: '', textLang: 'en'},
-        {href: 'https://example.com/page.html#test', text: 'click here', rel: '', textLang: 'en'},
-        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: '', textLang: 'en'},
+        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: ''},
+        {href: 'https://example.com/page.html', text: 'click here', rel: ''},
+        {href: 'https://example.com/page.html#test', text: 'click here', rel: ''},
+        {href: 'https://example.com/otherpage.html', text: 'legit link text', rel: ''},
       ],
     };
 
@@ -52,9 +52,9 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'javascript:alert(1)', text: 'click here', rel: '', textLang: 'en'},
-        {href: 'JavaScript:window.location="/otherpage.html"', text: 'click here', rel: '', textLang: 'en'},
-        {href: 'JAVASCRIPT:void(0)', text: 'click here', rel: '', textLang: 'en'},
+        {href: 'javascript:alert(1)', text: 'click here', rel: ''},
+        {href: 'JavaScript:window.location="/otherpage.html"', text: 'click here', rel: ''},
+        {href: 'JAVASCRIPT:void(0)', text: 'click here', rel: ''},
       ],
     };
 
@@ -68,8 +68,8 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: 'mailto:info@example.com', text: 'click here', rel: '', textLang: 'en'},
-        {href: 'mailto:mailmaster@localhost', text: 'click here', rel: '', textLang: 'en'},
+        {href: 'mailto:info@example.com', text: 'click here', rel: ''},
+        {href: 'mailto:mailmaster@localhost', text: 'click here', rel: ''},
       ],
     };
 
@@ -83,7 +83,7 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: '', text: 'click here', rel: '', textLang: 'en'},
+        {href: '', text: 'click here', rel: ''},
       ],
     };
 
@@ -97,7 +97,7 @@ describe('SEO: link text audit', () => {
         finalDisplayedUrl: 'https://example.com/page.html',
       },
       AnchorElements: [
-        {href: '', text: 'click here', rel: 'noopener nofollow', textLang: 'en'},
+        {href: '', text: 'click here', rel: 'noopener nofollow'},
       ],
     };
 
