@@ -92,15 +92,18 @@ function collectAnchorElements() {
   // @ts-expect-error - put into scope via stringification
   const anchorElements = getElementsInDocument('a'); // eslint-disable-line no-undef
 
-  // Check, if document has only one lang attribute in opening html tag. If so,
+  // Check, if document has only one lang attribute in opening html or in body tag. If so,
   // there is no need to run the `getLangOfInnerText()` function with multiple
   // possible DOM traversals
   /** @type {Array<HTMLElement|SVGElement>} */
   // @ts-expect-error - put into scope via stringification
-  const langElements = getElementsInDocument('[lang]'); // eslint-disable-line no-undef
-  const docHasOnlyHtmlLangAttr = (langElements.length === 1) &&
-    langElements[0].nodeName === 'HTML';
-  const lang = !docHasOnlyHtmlLangAttr ? null : langElements[0].getAttribute('lang');
+  const langElements = getElementsInDocument('body[lang], body [lang]'); // eslint-disable-line no-undef
+  const canFallbackToBodyLang = (langElements.length === 1) &&
+    langElements[0].nodeName === 'BODY';
+  const canFallbackToHtmlLang = !canFallbackToBodyLang && (langElements.length === 0) &&
+    document.documentElement.lang;
+  const lang = canFallbackToBodyLang ? langElements[0].getAttribute('lang') :
+    (canFallbackToHtmlLang ? document.documentElement.lang : null);
 
   return anchorElements.map(node => {
     if (node instanceof HTMLAnchorElement) {
